@@ -6,8 +6,8 @@
 - [Projekt beskrivelse](#projekt-beskrivelse)
 - [Projektformål](#projektformål)
 - [Folder struktur](#folder-struktur)
-- [Hvordan kan vi kontaktes](#hvordan-kan-vi-kontaktes)
-  - [Udviklere](#udviklere)
+- [Kontakt os](#kontakt-os)
+  - [Udviklere](#udviklere)]
 
 ## Projekt beskrivelse
 
@@ -29,9 +29,11 @@ ProjectGenspil
 │---Application                         # Indeholder kildekode for projektet
 │   │---GenSpil                         # Visual studio solution fil
 │   │   │---GenSpil                     # Visual studio projekt filer
+|   |   |---data                        # Persistent data
+|   |   |---Model                       # Models for the application
 ```
 
-## Hvordan kan vi kontaktes
+## Kontakt os
 
 ### Udviklere
 
