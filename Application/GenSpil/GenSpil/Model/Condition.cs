@@ -2,9 +2,9 @@
 {
     public class Condition
     {
-        public Type.Condition ConditionEnum { get; private set; }
-        public int Quantity { get; private set; }
-        public decimal Price { get; private set; }
+        public Type.Condition ConditionEnum { get; set; }
+        public int Quantity { get; set; }
+        public decimal Price { get; set; }
 
         /// <summary>
         /// Constructor til Condition

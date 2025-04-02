@@ -9,8 +9,13 @@ namespace GenSpil;
 internal class Program
 {
     const string TITLE = "GenSpil";
-    static readonly string DATA_JSON_FILE = "/data/genspil.json";
-    static BoardGameList _boardGameList = BoardGameList.Instance;
+    const string DATA_JSON_FILE = "/data/genspil.json";
+    static BoardGameList _boardGameList;
+
+    static Program()
+    {
+        _boardGameList = BoardGameList.Instance;
+    }
 
     static string GetVersion()
     {
@@ -30,7 +35,17 @@ internal class Program
 
     static void ShowBoardGame(BoardGame boardGame)
     {
-        throw new NotImplementedException();
+        HeadLine(boardGame.Title);
+        Console.WriteLine(boardGame.ToString());
+        Console.ReadKey();
+    }
+
+    static void ShowBoardGame(List<BoardGame> boardGames)
+    {
+        foreach (BoardGame boardGame in boardGames)
+        {
+            ShowBoardGame(boardGame);
+        }
     }
 
     static void AddBoardGame()
@@ -122,8 +137,12 @@ internal class Program
         Type.Condition? conditionEnum = ParseCondition(condition);
         Type.Genre? genreEnum = ParseGenre(genre);
 
+        List<BoardGame>? boardGames = _boardGameList.Search(title, genreEnum, variant, conditionEnum, price);
+
+        ShowBoardGame(boardGames);
+
         // Search
-        return _boardGameList.Search(title, genreEnum, variant, conditionEnum, price);
+        return boardGames;
     }
 
     static void ShowReportBoardGameSort()

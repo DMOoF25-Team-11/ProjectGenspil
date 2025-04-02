@@ -26,8 +26,7 @@ namespace GenSpil.Model
 
         public override string ToString()
         {
-            string result = "";
-            //$"{Title} ({_variants.Variants}) - Genre: {_genre}";
+            string result = $"Titel {Title}\n";
             return result;
         }
     }

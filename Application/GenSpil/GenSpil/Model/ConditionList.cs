@@ -2,13 +2,14 @@
 {
     public class ConditionList
     {
-        List<Condition> _conditions = new List<Condition>();
+        public List<Condition> Conditions { get; private set; }
 
         public ConditionList()
         {
+            Conditions = new List<Condition>();
             foreach (Type.Condition condition in Enum.GetValues(typeof(Type.Condition)))
             {
-                _conditions.Add(new Condition(condition, 0, 0));
+                Conditions.Add(new Condition(condition, 0, 0));
             }
         }
     }
