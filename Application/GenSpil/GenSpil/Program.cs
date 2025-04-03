@@ -177,18 +177,18 @@ internal class Program
         Console.WriteLine(":");
         // User input
         Console.SetCursorPosition(cInputLeft, cTop++);
-        title = Console.ReadLine();
+        title = ReadLineWithEscape();
         Console.SetCursorPosition(cInputLeft, cTop++);
-        genre = Console.ReadLine();
+        genre = ReadLineWithEscape();
         Console.SetCursorPosition(cInputLeft, cTop++);
-        variant = Console.ReadLine();
+        variant = ReadLineWithEscape();
         Console.SetCursorPosition(cInputLeft, cTop++);
-        condition = Console.ReadLine();
+        condition = ReadLineWithEscape();
         Console.SetCursorPosition(cInputLeft, cTop + i);
-        price = Console.ReadLine();
+        price = ReadLineWithEscape();
         Console.CursorVisible = false;
 
-        Type.Condition? conditionEnum = ParseCondition(condition);
+        List<Type.Condition>? conditionEnum = ParseCondition(condition);
         List<Type.Genre>? genreEnum = ParseGenre(genre);
 
         List<BoardGame>? boardGames = _boardGameList.Search(title, genreEnum, variant, conditionEnum, price);
@@ -274,28 +274,32 @@ internal class Program
         return input.ToString();
     }
 
-    static Type.Condition? ParseCondition(string? condition)
+    static List<Type.Condition>? ParseCondition(string? condition)
     {
+        List<Type.Condition> list = new List<Type.Condition>();
         if (condition == null)
         {
             return null;
         }
+        string[] conditionArray = condition.Split(" ");
 
-        // Try to parse as integer
-        if (int.TryParse(condition, out int conditionInt))
+        foreach (string conditionString in conditionArray)
         {
-            if (Enum.IsDefined(typeof(Type.Condition), conditionInt))
+            // Try to parse as integer
+            if (int.TryParse(conditionString, out int conditionInt))
             {
-                return (Type.Condition)conditionInt;
+                if (Enum.IsDefined(typeof(Type.Condition), conditionInt))
+                {
+                    list.Add((Type.Condition)conditionInt);
+                }
+            }
+            else if (Enum.TryParse(conditionString, true, out Type.Condition conditionEnum))
+            {
+                list.Add(conditionEnum);
             }
         }
-
-        // Try to parse as string
-        if (Enum.TryParse(condition, true, out Type.Condition conditionEnum))
-        {
-            return conditionEnum;
-        }
-
+        if (list.Count > 0)
+            return list;
         return null;
     }
 

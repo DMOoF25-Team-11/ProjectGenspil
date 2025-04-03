@@ -69,16 +69,18 @@ public sealed class BoardGameList
     /// <summary>
     /// Søg efter brætspil
     /// </summary>
-    public List<BoardGame> Search(string? title, List<Type.Genre>? genre, string? variant, Type.Condition? condition, string? price)
+    public List<BoardGame> Search(string? title, List<Type.Genre>? genre, string? variant, List<Type.Condition>? condition, string? price)
     {
         lock (_lock)
         {
             var filteredBoardGames = BoardGames.AsEnumerable();
 
+            // Filter Title
             if (title != null & title != "")
             {
                 filteredBoardGames = filteredBoardGames.Where(x => x.Title.Contains(title, StringComparison.OrdinalIgnoreCase));
             }
+            // Filter Genre
             if (genre != null)
             {
                 for (int i = 0; i < genre.Count; i++)
@@ -87,6 +89,7 @@ public sealed class BoardGameList
                     filteredBoardGames = filteredBoardGames.Where(x => x.Genre.Contains(g));
                 }
             }
+            // Filter Variant
             if (variant != null & variant != "")
             {
                 for (int i = 0; i < filteredBoardGames.Count(); i++)
@@ -103,52 +106,72 @@ public sealed class BoardGameList
                 }
                 filteredBoardGames = filteredBoardGames.Where(x => x.Variants.Any(v => v.Title.Contains(variant, StringComparison.OrdinalIgnoreCase)));
             }
+            // Filter Condition
             if (condition != null)
             {
-                //filteredBoardGames = filteredBoardGames.Where(x => x.Variants.Any(v => v.ConditionList.Any(c => c.ToString().Contains(condition.ToString(), StringComparison.OrdinalIgnoreCase))));
-            }
-            if (price != null & price != "")
-            {
-                string priceOperator;
-                if (price.Contains(">=") | price.Contains("=>"))
-                    priceOperator = ">=";
-                else if (price.Contains("<=") | price.Contains("=<"))
-                    priceOperator = "<=";
-                else
-                    priceOperator = "=";
-                //    price = new string(price.Where(char.IsDigit).ToArray());
-                decimal priceValue = decimal.Parse(price);
                 for (int i = 0; i < filteredBoardGames.Count(); i++)
                 {
                     var game = filteredBoardGames.ElementAt(i);
                     for (int j = 0; j < game.Variants.Count; j++)
                     {
                         var v = game.Variants.ElementAt(j);
-                        for (int k = 0; k < v.ConditionList.Conditions.Count; k++)
+                        List<Condition> itemsToRemove = new List<Condition>();
+                        foreach (var c in filteredBoardGames.ElementAt(i).Variants.ElementAt(j).ConditionList.Conditions)
                         {
-                            var c = v.ConditionList.Conditions.ElementAt(k);
+                            if (!condition.Contains(c.ConditionEnum))
                             {
-                                filteredBoardGames.ElementAt(i).Variants.ElementAt(j).ConditionList.Conditions.Remove(c);
-                            }
-                            if (!v.Title.Contains(variant, StringComparison.OrdinalIgnoreCase))
-                            {
-                                filteredBoardGames.ElementAt(i).Variants.Remove(v);
+                                itemsToRemove.Add(c);
                             }
                         }
+                        foreach (var item in itemsToRemove)
+                        {
+                            filteredBoardGames.ElementAt(i).Variants.ElementAt(j).ConditionList.Conditions.Remove(item);
+                        }
                     }
-
-                    //filteredBoardGames = filteredBoardGames.Where(x => x.Variants.Any(v => v.ConditionList.Any(c => c. >= decimal.Parse(price.Replace(">=", ""))));
-                    //    }
-                    //    else if (price.Contains("<="))
-                    //    {
-                    //        //filteredBoardGames = filteredBoardGames.Where(x => x.Variants.Any(v => v.Price <= decimal.Parse(price.Replace("<=", ""))));
-                    //    }
-                    //    else
-                    //    {
-                    //        //filteredBoardGames = filteredBoardGames.Where(x => x.Variants.Any(v => v.Price == decimal.Parse(price)));
-                    // }
                 }
             }
+            //if (price != null & price != "")
+            //{
+            //    string priceOperator;
+            //    if (price.Contains(">=") | price.Contains("=>"))
+            //        priceOperator = ">=";
+            //    else if (price.Contains("<=") | price.Contains("=<"))
+            //        priceOperator = "<=";
+            //    else
+            //        priceOperator = "=";
+            //    //    price = new string(price.Where(char.IsDigit).ToArray());
+            //    decimal priceValue = decimal.Parse(price);
+            //    for (int i = 0; i < filteredBoardGames.Count(); i++)
+            //    {
+            //        var game = filteredBoardGames.ElementAt(i);
+            //        for (int j = 0; j < game.Variants.Count; j++)
+            //        {
+            //            var v = game.Variants.ElementAt(j);
+            //            for (int k = 0; k < v.ConditionList.Conditions.Count; k++)
+            //            {
+            //                var c = v.ConditionList.Conditions.ElementAt(k);
+            //                {
+            //                    filteredBoardGames.ElementAt(i).Variants.ElementAt(j).ConditionList.Conditions.Remove(c);
+            //                }
+            //                if (!v.Title.Contains(variant, StringComparison.OrdinalIgnoreCase))
+            //                {
+            //                    filteredBoardGames.ElementAt(i).Variants.Remove(v);
+            //                }
+            //            }
+            //        }
+
+            //        //filteredBoardGames = filteredBoardGames.Where(x => x.Variants.Any(v => v.ConditionList.Any(c => c. >= decimal.Parse(price.Replace(">=", ""))));
+            //        //    }
+            //        //    else if (price.Contains("<="))
+            //        //    {
+            //        //        //filteredBoardGames = filteredBoardGames.Where(x => x.Variants.Any(v => v.Price <= decimal.Parse(price.Replace("<=", ""))));
+            //        //    }
+            //        //    else
+            //        //    {
+            //        //        //filteredBoardGames = filteredBoardGames.Where(x => x.Variants.Any(v => v.Price == decimal.Parse(price)));
+            //        // }
+            //    }
+            //}
             return filteredBoardGames.ToList();
         }
     }
@@ -172,7 +195,7 @@ public sealed class BoardGameList
         boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.God).First().Quantity = 1;
         boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.God).First().Price = 200;
         boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Slidt).First().Quantity = 2;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.God).First().Price = 100;
+        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Slidt).First().Price = 100;
         BoardGames.Add(new BoardGame(1, "Catan", new List<BoardGameVariant> { boardGameVariant }, new List<Type.Genre> { Type.Genre.Strategi }));
     }
 #endif
