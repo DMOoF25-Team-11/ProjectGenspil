@@ -1,4 +1,6 @@
-﻿namespace GenSpil.Model;
+﻿using System.Text.Json.Serialization;
+
+namespace GenSpil.Model;
 
 /// <summary>
 /// Singleton class for handling a list of board games.
@@ -6,7 +8,6 @@
 /// </summary>
 public sealed class BoardGameList
 {
-    public List<BoardGame> BoardGames { get; set; }
     static BoardGameList? instance = null;
     static readonly object _lock = new object();
     public static BoardGameList Instance
@@ -24,6 +25,9 @@ public sealed class BoardGameList
         }
     } ///> Singleton instance of the BoardGameList
 
+    public List<BoardGame> BoardGames { get; set; }
+
+    [JsonConstructor]
     BoardGameList()
     {
         BoardGames = new List<BoardGame>();

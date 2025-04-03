@@ -1,0 +1,46 @@
+{
+    "Version": "1.0",
+    "BoardGames": {
+        "BoardGames": [
+            {
+                "BoardGameID": 1,
+                "Title": "Catan",
+                "Variants": [
+                    {
+                        "Title": "Standard",
+                        "ConditionList": {
+                            "Conditions": [
+                                {
+                                    "ConditionEnum": "Ny",
+                                    "Quantity": 5,
+                                    "Price": 250
+                                },
+                                {
+                                    "ConditionEnum": "Brugt",
+                                    "Quantity": 0,
+                                    "Price": 0
+                                },
+                                {
+                                    "ConditionEnum": "God",
+                                    "Quantity": 1,
+                                    "Price": 100
+                                },
+                                {
+                                    "ConditionEnum": "Slidt",
+                                    "Quantity": 2,
+                                    "Price": 0
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "Genre": [
+                    "Strategi"
+                ]
+            }
+        ]
+    },
+    "Users": {
+        "Users": []
+    }
+}

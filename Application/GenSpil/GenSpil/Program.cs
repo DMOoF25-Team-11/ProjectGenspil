@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Reflection;
+using GenSpil.Handler;
 using GenSpil.Model;
 using TirsvadCLI.Frame;
 using TirsvadCLI.MenuPaginator;
@@ -10,8 +11,9 @@ namespace GenSpil;
 internal class Program
 {
     const string TITLE = "GenSpil";
-    const string DATA_JSON_FILE = "/data/genspil.json";
+    const string DATA_JSON_FILE = "./data/genspil.json";
     static BoardGameList _boardGameList;
+    static JsonFileHandler _jsonFileHandler = JsonFileHandler.Instance;
 
     static Program()
     {
@@ -384,7 +386,13 @@ internal class Program
 
     static void Main(string[] args)
     {
+#if DEBUG
+        JsonFileHandler.Instance.ExportData(DATA_JSON_FILE);
+#else
+        JsonFileHandler.Instance.ImportData(DATA_JSON_FILE);
+#endif
         //Login();
+
         MenuMain();
     }
 }
