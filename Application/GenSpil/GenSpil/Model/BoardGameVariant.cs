@@ -10,5 +10,10 @@
             Title = title;
             ConditionList = conditionList;
         }
+
+        public override string ToString()
+        {
+            return Title;
+        }
     }
 }

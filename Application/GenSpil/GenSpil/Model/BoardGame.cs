@@ -26,7 +26,14 @@ namespace GenSpil.Model
 
         public override string ToString()
         {
-            string result = $"Titel {Title}\n";
+            string result = $"Titel : {Title}\n";
+            result += "Genre : ";
+            string prefix = "";
+            foreach (var item in this.Genre)
+            {
+                result += $"{prefix}{item}";
+                prefix = ", ";
+            }
             return result;
         }
     }
