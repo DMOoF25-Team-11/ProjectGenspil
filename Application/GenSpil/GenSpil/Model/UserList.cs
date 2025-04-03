@@ -1,4 +1,6 @@
-﻿namespace GenSpil.Model;
+﻿using System.Text.Json.Serialization;
+
+namespace GenSpil.Model;
 
 /// <summary>
 /// Singleton class for handling a list of users.
@@ -25,7 +27,8 @@ public sealed class UserList
 
     public List<User> Users { get; private set; }
 
-    public UserList()
+    [JsonConstructor]
+    UserList()
     {
         Users = new List<User>();
     }
