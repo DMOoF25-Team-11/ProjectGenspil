@@ -5,7 +5,6 @@ using GenSpil.Handler;
 using GenSpil.Model;
 using TirsvadCLI.Frame;
 using TirsvadCLI.MenuPaginator;
-//using GenSpil.Model;
 
 namespace GenSpil;
 
@@ -15,11 +14,13 @@ internal class Program
     const string DATA_JSON_FILE = "./data/genspil.json";
     static BoardGameList _boardGameList;
     static Authentication _auth;
+    static UserList _userList;
     static JsonFileHandler _jsonFileHandler = JsonFileHandler.Instance;
 
     static Program()
     {
         _boardGameList = BoardGameList.Instance;
+        _userList = UserList.Instance;
         CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("da-DK");
         CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("da-DK");
         _auth = new Authentication();
@@ -38,6 +39,8 @@ internal class Program
     {
         int cTop;
         int cInputLeft = 14;
+        string? username;
+        string? password;
         do
         {
             Console.CursorVisible = true;
@@ -53,10 +56,10 @@ internal class Program
             Console.WriteLine(":");
             // user input 
             Console.SetCursorPosition(cInputLeft, cTop++);
-            string? username = Console.ReadLine();
+            username = ReadLineWithEscape();
             Console.SetCursorPosition(cInputLeft, cTop++);
             //TODO hide password input
-            string? password = Console.ReadLine();
+            password = ReadLineWithEscape(true);
             Console.CursorVisible = false;
             // Authenticate
             if (username == null || password == null)
@@ -101,7 +104,7 @@ internal class Program
                 Console.WriteLine("Condition : " + conditions.ToString());
             }
         }
-        Console.WriteLine("Tryk på en tast for at fortsætte...");
+        Console.WriteLine("\nTryk på en tast for at fortsætte...");
         Console.ReadKey();
     }
 
@@ -180,7 +183,7 @@ internal class Program
         throw new NotImplementedException();
     }
 
-    static void RemoveBoardGame()
+    static void RemoveBoardGame(BoardGame boardGame)
     {
         throw new NotImplementedException();
     }
@@ -256,12 +259,20 @@ internal class Program
 
     static void ShowReportBoardGameSortTitle()
     {
-        throw new NotImplementedException();
+        var sortedBoardGames = _boardGameList.BoardGames.OrderBy(bg => bg.Title).ToList();
+        foreach (var boardGame in sortedBoardGames)
+        {
+            ShowBoardGame(boardGame);
+        }
     }
 
     static void ShowReportBoardGameSortGenre()
     {
-        throw new NotImplementedException();
+        var sortedBoardGames = _boardGameList.BoardGames.OrderBy(bg => bg.Genre).ToList();
+        foreach (var boardGame in sortedBoardGames)
+        {
+            ShowBoardGame(boardGame);
+        }
     }
 
     /// <summary>
@@ -299,7 +310,7 @@ internal class Program
         return new string(' ', leftPadding) + text + new string(' ', rightPadding);
     }
 
-    static string? ReadLineWithEscape()
+    static string? ReadLineWithEscape(bool hideInput = false)
     {
         StringBuilder input = new StringBuilder();
         ConsoleKeyInfo keyInfo;
@@ -317,7 +328,14 @@ internal class Program
             else if (keyInfo.Key != ConsoleKey.Backspace)
             {
                 input.Append(keyInfo.KeyChar);
-                Console.Write(keyInfo.KeyChar);
+                if (hideInput)
+                {
+                    Console.Write('*');
+                }
+                else
+                {
+                    Console.Write(keyInfo.KeyChar);
+                }
             }
         }
         Console.WriteLine();
@@ -415,10 +433,11 @@ internal class Program
             menuItems.Add(new MenuItem("Brætspil", MenuBoardGame));
             menuItems.Add(new MenuItem("Kunde", MenuCostumer));
             menuItems.Add(new MenuItem("Rapporter", MenuReport));
-            menuItems.Add(new MenuItem("Admin", MenuAdmin));
+            if (_auth.GetRole(_auth.User) == Type.Role.Admin)
+                menuItems.Add(new MenuItem("Admin", MenuAdmin));
             menuItems.Add(new MenuItem("Logout", Logout));
             // Create a menu paginator
-            MenuPaginator menu = new(menuItems, 10);
+            MenuPaginator menu = new(menuItems, 10, true);
             if (menu.menuItem != null && menu.menuItem.Action is Action action)
                 action(); // Execute the action
             else
