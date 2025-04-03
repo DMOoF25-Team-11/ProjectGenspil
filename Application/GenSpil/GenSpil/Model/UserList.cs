@@ -29,4 +29,19 @@ public sealed class UserList
     {
         Users = new List<User>();
     }
+
+    public void Add(User user)
+    {
+        Users.Add(user);
+    }
+
+    public void Remove(User user)
+    {
+        Users.Remove(user);
+    }
+
+    public void Clear()
+    {
+        Users.Clear();
+    }
 } ///> Singleton instance of the UserList
