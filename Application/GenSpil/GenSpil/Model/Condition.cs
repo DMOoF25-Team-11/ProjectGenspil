@@ -1,4 +1,6 @@
-﻿namespace GenSpil.Model
+﻿using TirsvadCLI.AnsiCode;
+
+namespace GenSpil.Model
 {
     public class Condition
     {
@@ -19,6 +21,19 @@
             Price = price;
         }
 
-        public override string ToString() => $"{ConditionEnum} - Antal: {Quantity}, Pris: {Price} kr";
+        public override string ToString()
+        {
+            string result;
+            if (Quantity == 0)
+            {
+                result = $"{AnsiCode.BRIGHT_BLACK}{ConditionEnum} - Ingen på lager";
+            }
+            else
+            {
+                result = $"{ConditionEnum} - Antal: {Quantity}";
+            }
+            result += $", Pris: {Price} kr{AnsiCode.ANSI_RESET}";
+            return result;
+        }
     }
 }

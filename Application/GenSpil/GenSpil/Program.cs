@@ -43,6 +43,15 @@ internal class Program
     {
         HeadLine(boardGame.Title);
         Console.WriteLine(boardGame.ToString());
+        foreach (BoardGameVariant boardGameVariant in boardGame.Variants)
+        {
+            Console.WriteLine("Variant : " + boardGameVariant.ToString());
+            foreach (var conditions in boardGameVariant.ConditionList.Conditions)
+            {
+                Console.WriteLine("Condition : " + conditions.ToString());
+            }
+        }
+        Console.WriteLine("Tryk på en tast for at fortsætte...");
         Console.ReadKey();
     }
 
