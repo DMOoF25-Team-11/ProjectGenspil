@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Globalization;
+using System.Reflection;
 using GenSpil.Model;
 using TirsvadCLI.Frame;
 using TirsvadCLI.MenuPaginator;
@@ -15,6 +16,8 @@ internal class Program
     static Program()
     {
         _boardGameList = BoardGameList.Instance;
+        CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("da-DK");
+        CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("da-DK");
     }
 
     static string GetVersion()

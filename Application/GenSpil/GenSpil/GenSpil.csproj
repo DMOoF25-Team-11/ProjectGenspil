@@ -9,12 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="C:\Users\jenst\.nuget\packages\tirsvadcli.menupaginator\0.2.2.4\contentFiles\any\any\MessageText.da.json" />
+    <None Remove="C:\Users\jenst\.nuget\packages\tirsvadcli.menupaginator\0.2.2.4\contentFiles\any\any\MessageText.en.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="data\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="TirsvadCLI.Frame" Version="0.1.0-alpha.6" />
-    <PackageReference Include="TirsvadCLI.MenuPaginator" Version="0.2.2.4" />
+    <PackageReference Include="TirsvadCLI.MenuPaginator" Version="0.2.2.6" />
   </ItemGroup>
 
 </Project>
