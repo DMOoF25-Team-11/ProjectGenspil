@@ -14,6 +14,7 @@ internal class Program
     const string TITLE = "GenSpil";
     const string DATA_JSON_FILE = "./data/genspil.json";
     static BoardGameList _boardGameList;
+    static Authentication _auth;
     static JsonFileHandler _jsonFileHandler = JsonFileHandler.Instance;
 
     static Program()
@@ -21,6 +22,7 @@ internal class Program
         _boardGameList = BoardGameList.Instance;
         CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("da-DK");
         CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("da-DK");
+        _auth = new Authentication();
     }
 
     static string GetVersion()
@@ -29,14 +31,62 @@ internal class Program
         return version != null ? $"{version.Major}.{version.Minor}" : "Unknown version";
     }
 
+    /// <summary>
+    /// Login with username and password
+    /// </summary>
     static void Login()
     {
-        throw new NotImplementedException();
+        int cTop;
+        int cInputLeft = 14;
+        do
+        {
+            Console.CursorVisible = true;
+            // Headline
+            HeadLine("Log på");
+            // Form 
+            cTop = Console.CursorTop;
+            Console.Write("Brugernavn");
+            Console.CursorLeft = cInputLeft - 2;
+            Console.WriteLine(":");
+            Console.Write("Adgangskode");
+            Console.CursorLeft = cInputLeft - 2;
+            Console.WriteLine(":");
+            // user input 
+            Console.SetCursorPosition(cInputLeft, cTop++);
+            string? username = Console.ReadLine();
+            Console.SetCursorPosition(cInputLeft, cTop++);
+            //TODO hide password input
+            string? password = Console.ReadLine();
+            Console.CursorVisible = false;
+            // Authenticate
+            if (username == null || password == null)
+            {
+                ErrorMessage("Brugernavn eller adgangskode er tom");
+                continue;
+            }
+
+            if (_auth.Login(username, password))
+            {
+                Console.WriteLine($"Du er logget ind som {username}");
+                var role = _auth.GetRole(username);
+                Console.WriteLine($"Din rolle er {role}");
+                break;
+            }
+            else
+            {
+                ErrorMessage("Forkert brugernavn eller adgangskode");
+
+            }
+
+        } while (true);
+
+
     }
 
     static void Logout()
     {
-        throw new NotImplementedException();
+        _auth.Logout();
+        Login();
     }
 
     static void ShowBoardGame(BoardGame boardGame)
@@ -336,6 +386,16 @@ internal class Program
         return null;
     }
 
+    static void ErrorMessage(string message)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine();
+        Console.WriteLine(message);
+        Console.ResetColor();
+        Console.WriteLine("Tryk på en tast for at fortsætte...");
+        Console.ReadKey();
+    }
+
     #region menu
     /// <summary>
     /// Main menu
@@ -475,8 +535,7 @@ internal class Program
 #if !DEBUG
         JsonFileHandler.Instance.ImportData(DATA_JSON_FILE);
 #endif
-        //Login();
-
+        Login();
         MenuMain();
         JsonFileHandler.Instance.ExportData(DATA_JSON_FILE);
     }
