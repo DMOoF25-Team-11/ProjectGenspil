@@ -245,7 +245,6 @@ internal class Program
         return null;
     }
 
-
     #region menu
     /// <summary>
     /// Main menu
@@ -382,10 +381,7 @@ internal class Program
 
     static void Main(string[] args)
     {
-        do
-        {
-            //Login();
-            MenuMain();
-        } while (true);
+        //Login();
+        MenuMain();
     }
 }

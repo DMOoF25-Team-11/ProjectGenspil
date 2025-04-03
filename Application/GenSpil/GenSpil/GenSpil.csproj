@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="TirsvadCLI.Frame" Version="0.1.0-alpha.6" />
-    <PackageReference Include="TirsvadCLI.MenuPaginator" Version="0.2.2.3" />
+    <PackageReference Include="TirsvadCLI.MenuPaginator" Version="0.2.2.4" />
   </ItemGroup>
 
 </Project>
