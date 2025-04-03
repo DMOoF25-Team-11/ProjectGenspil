@@ -69,7 +69,7 @@ public sealed class BoardGameList
     /// <summary>
     /// Søg efter brætspil
     /// </summary>
-    public List<BoardGame> Search(string? title, Type.Genre? genre, string? variant, Type.Condition? condition, string? price)
+    public List<BoardGame> Search(string? title, List<Type.Genre>? genre, string? variant, Type.Condition? condition, string? price)
     {
         lock (_lock)
         {
@@ -81,7 +81,11 @@ public sealed class BoardGameList
             }
             if (genre != null)
             {
-                filteredBoardGames = filteredBoardGames.Where(x => x.Genre.Contains(genre.Value));
+                for (int i = 0; i < genre.Count; i++)
+                {
+                    var g = genre.ElementAt(i);
+                    filteredBoardGames = filteredBoardGames.Where(x => x.Genre.Contains(g));
+                }
             }
             if (variant != null & variant != "")
             {

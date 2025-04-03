@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Reflection;
+using System.Text;
 using GenSpil.Handler;
 using GenSpil.Model;
 using TirsvadCLI.Frame;
@@ -55,6 +56,45 @@ internal class Program
 
     static void AddBoardGame()
     {
+        do
+        {
+            Console.Clear();
+            Console.CursorVisible = true;
+            HeadLine("Tilføj brætspil");
+            // Form
+            int cTop = Console.CursorTop;
+            int cInputLeft = 14;
+            Console.Write("Title");
+            Console.CursorLeft = cInputLeft - 2;
+            Console.WriteLine(":");
+            Console.Write("Genre");
+            Console.CursorLeft = cInputLeft - 2;
+            Console.WriteLine(":");
+            for (int i = 0; i < Enum.GetValues<Type.Genre>().Length; i++)
+            {
+                object? genreValue = Enum.GetValues(typeof(Type.Genre)).GetValue(i);
+                if (genreValue != null)
+                {
+                    Console.Write((int)genreValue);
+                    Console.Write(" - ");
+                    Console.WriteLine(Enum.GetName(typeof(Type.Genre), i));
+                }
+            }
+
+            // User input
+            Console.SetCursorPosition(cInputLeft, cTop++);
+            string? title = ReadLineWithEscape();
+            Console.SetCursorPosition(cInputLeft, cTop++);
+            string? genre = ReadLineWithEscape();
+            Console.CursorVisible = false;
+
+            List<Type.Genre>? genreEnum = ParseGenre(genre);
+            if (genreEnum == null)
+            {
+                Console.WriteLine("Ugyldig genre. Try again.");
+                continue;
+            }
+        } while (true);
         BoardGame boardGame = new BoardGame(0, "Matador", new List<BoardGameVariant> { new BoardGameVariant("", new ConditionList()) }, [Type.Genre.Familie]);
         AddBoardGameVariant(boardGame);
         throw new NotImplementedException();
@@ -140,7 +180,7 @@ internal class Program
         Console.CursorVisible = false;
 
         Type.Condition? conditionEnum = ParseCondition(condition);
-        Type.Genre? genreEnum = ParseGenre(genre);
+        List<Type.Genre>? genreEnum = ParseGenre(genre);
 
         List<BoardGame>? boardGames = _boardGameList.Search(title, genreEnum, variant, conditionEnum, price);
 
@@ -200,6 +240,31 @@ internal class Program
         return new string(' ', leftPadding) + text + new string(' ', rightPadding);
     }
 
+    static string? ReadLineWithEscape()
+    {
+        StringBuilder input = new StringBuilder();
+        ConsoleKeyInfo keyInfo;
+        while ((keyInfo = Console.ReadKey(true)).Key != ConsoleKey.Enter)
+        {
+            if (keyInfo.Key == ConsoleKey.Escape)
+            {
+                return null; // Return null if Esc is pressed
+            }
+            if (keyInfo.Key == ConsoleKey.Backspace && input.Length > 0)
+            {
+                input.Remove(input.Length - 1, 1);
+                Console.Write("\b \b");
+            }
+            else if (keyInfo.Key != ConsoleKey.Backspace)
+            {
+                input.Append(keyInfo.KeyChar);
+                Console.Write(keyInfo.KeyChar);
+            }
+        }
+        Console.WriteLine();
+        return input.ToString();
+    }
+
     static Type.Condition? ParseCondition(string? condition)
     {
         if (condition == null)
@@ -225,28 +290,36 @@ internal class Program
         return null;
     }
 
-    static Type.Genre? ParseGenre(string? gerne)
+    static List<Type.Genre>? ParseGenre(string? gerne)
     {
+        List<Type.Genre> list = new List<Type.Genre>();
         if (gerne == null)
         {
             return null;
         }
 
-        // Try to parse as integer
-        if (int.TryParse(gerne, out int gerneInt))
+        string[] genreArray = gerne.Split(" ");
+
+        foreach (string item in genreArray)
         {
-            if (Enum.IsDefined(typeof(Type.Genre), gerneInt))
+            // Try to parse as integer
+            if (int.TryParse(item, out int gerneInt))
             {
-                return (Type.Genre)gerneInt;
+                if (Enum.IsDefined(typeof(Type.Genre), gerneInt))
+                {
+                    list.Add((Type.Genre)gerneInt);
+                }
+            }
+
+            // Try to parse as string
+            if (Enum.TryParse(item, true, out Type.Genre genreEnum))
+            {
+                list.Add(genreEnum);
             }
         }
 
-        // Try to parse as string
-        if (Enum.TryParse(gerne, true, out Type.Genre genreEnum))
-        {
-            return genreEnum;
-        }
-
+        if (list.Count > 0)
+            return list;
         return null;
     }
 
@@ -386,13 +459,12 @@ internal class Program
 
     static void Main(string[] args)
     {
-#if DEBUG
-        JsonFileHandler.Instance.ExportData(DATA_JSON_FILE);
-#else
+#if !DEBUG
         JsonFileHandler.Instance.ImportData(DATA_JSON_FILE);
 #endif
         //Login();
 
         MenuMain();
+        JsonFileHandler.Instance.ExportData(DATA_JSON_FILE);
     }
 }
