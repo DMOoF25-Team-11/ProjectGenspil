@@ -104,6 +104,7 @@ internal class Program
                 Console.WriteLine("Condition : " + conditions.ToString());
             }
         }
+
         Console.WriteLine("\nTryk på en tast for at fortsætte...");
         Console.ReadKey();
     }
@@ -114,6 +115,19 @@ internal class Program
         {
             ShowBoardGame(boardGame);
         }
+    }
+
+    static void ShowBoardGameVariant(BoardGame boardGame, BoardGameVariant boardGameVariant)
+    {
+        HeadLine(boardGame.Title);
+        Console.WriteLine(boardGame.ToString());
+        Console.WriteLine("Variant : " + boardGameVariant.ToString());
+        foreach (var conditions in boardGameVariant.ConditionList.Conditions)
+        {
+            Console.WriteLine("Condition : " + conditions.ToString());
+        }
+        Console.WriteLine("\nTryk på en tast for at fortsætte...");
+        Console.ReadKey();
     }
 
     static void AddBoardGame()
@@ -157,8 +171,8 @@ internal class Program
                 continue;
             }
         } while (true);
-        BoardGame boardGame = new BoardGame(0, "Matador", new List<BoardGameVariant> { new BoardGameVariant("", new ConditionList()) }, [Type.Genre.Familie]);
-        AddBoardGameVariant(boardGame);
+        //BoardGame boardGame = new BoardGame(0, "Matador", new List<BoardGameVariant> { new BoardGameVariant("", new ConditionList()) }, [Type.Genre.Familie]);
+        //AddBoardGameVariant(boardGame);
         throw new NotImplementedException();
     }
 
@@ -524,14 +538,22 @@ internal class Program
     /// </summary>
     static void MenuChooseBoardGame()
     {
+        string prefix = "";
         do
         {
             Console.Clear();
             HeadLine("Vælg spil");
             List<MenuItem> menuItems = new();
-            foreach (BoardGame boardGame in _boardGameList.BoardGames)
+            foreach (BoardGame boardGame in _boardGameList.BoardGames.OrderBy(bg => bg.Title).ToList())
             {
-                menuItems.Add(new MenuItem(boardGame.Title, () => ShowBoardGame(boardGame)));
+                foreach (BoardGameVariant boardGameVariant in boardGame.Variants)
+                {
+                    if (boardGameVariant.Title == "")
+                        prefix = "";
+                    else
+                        prefix = " : ";
+                    menuItems.Add(new MenuItem(boardGame.Title + prefix + boardGameVariant.Title, (() => ShowBoardGameVariant(boardGame, boardGameVariant))));
+                }
             }
             MenuPaginator menu = new(menuItems, 10);
             if (menu.menuItem != null && menu.menuItem.Action is Action action)
