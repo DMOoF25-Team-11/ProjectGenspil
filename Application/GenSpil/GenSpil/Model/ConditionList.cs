@@ -1,15 +1,35 @@
-﻿namespace GenSpil.Model
+﻿using System.Text.Json.Serialization;
+
+namespace GenSpil.Model
 {
     public class ConditionList
     {
-        public List<Condition> Conditions { get; private set; }
-
+        public ICollection<Condition> Conditions { get; private set; }
+        [JsonConstructor]
         public ConditionList()
         {
             Conditions = new List<Condition>();
             foreach (Type.Condition condition in Enum.GetValues(typeof(Type.Condition)))
             {
-                Conditions.Add(new Condition(condition, 0, 0));
+                Conditions.Add(new Condition(condition, 0, 0m));
+            }
+        }
+
+        public void SetPrice(Type.Condition condition, decimal price)
+        {
+            var conditionItem = Conditions.FirstOrDefault(c => c.ConditionEnum == condition);
+            if (conditionItem != null)
+            {
+                conditionItem.Price = price;
+            }
+        }
+
+        public void SetQuantity(Type.Condition condition, int quantity)
+        {
+            var conditionItem = Conditions.FirstOrDefault(c => c.ConditionEnum == condition);
+            if (conditionItem != null)
+            {
+                conditionItem.Quantity = quantity;
             }
         }
 

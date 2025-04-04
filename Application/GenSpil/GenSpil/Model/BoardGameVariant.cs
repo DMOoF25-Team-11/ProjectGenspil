@@ -10,7 +10,14 @@
         {
             Title = title;
             NumbersOfPlayers = numbersOfPlayers;
-            ConditionList = conditionList;
+            if (conditionList != null)
+            {
+                ConditionList = conditionList;
+            }
+            else
+            {
+                ConditionList = new ConditionList();
+            }
         }
 
         public override string ToString()

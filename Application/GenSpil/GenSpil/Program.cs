@@ -129,7 +129,7 @@ internal class Program
     /// Displays the details of a list of board games.
     /// </summary>
     /// <param name="boardGames">The list of board games to display.</param>
-    static void ShowBoardGame(List<BoardGame> boardGames)
+    static void ShowBoardGame(IEnumerable<BoardGame> boardGames)
     {
         foreach (BoardGame boardGame in boardGames)
         {
@@ -195,12 +195,12 @@ internal class Program
             if (genreEnum == null)
             {
                 ErrorMessage("Intet indtastet om genre.");
-                continue;
+                return;
             }
             if (title == null)
             {
                 ErrorMessage("Intet indtastet om titel.");
-                continue;
+                return;
             }
             // Check if title already exists
             foreach (BoardGame item in _boardGameList.BoardGames)
@@ -208,11 +208,11 @@ internal class Program
                 if (item.Title == title)
                 {
                     ErrorMessage("Brætspil med denne titel findes allerede.");
-                    continue;
+                    return;
                 }
             }
             // Add board game
-            boardGame = new BoardGame(title, new List<BoardGameVariant>(), genreEnum);
+            boardGame = new BoardGame(title, genreEnum);
             _boardGameList.Add(boardGame);
             break;
         } while (true);
@@ -264,7 +264,12 @@ internal class Program
                 ErrorMessage("Intet indtastet om antal spillere.");
                 return;
             }
+
             variant = new BoardGameVariant("", numbersOfPlayers, new ConditionList());
+            //foreach (var c in Type.Condition.GetValues(typeof(Type.Condition)))
+            //{
+            //    variant.ConditionList.Conditions.Add(new Condition((Type.Condition)c, 0, 0));
+            //}
             _boardGameList.Add(variant, boardGame.Guid);
             return;
         }
@@ -284,7 +289,7 @@ internal class Program
     /// Prompts the user to search for board games based on various criteria.
     /// </summary>
     /// <returns>A list of board games that match the search criteria.</returns>
-    static List<BoardGame>? SearchBoardGame()
+    static void SearchBoardGame()
     {
         int cTop;
         int cInputLeft = 14;
@@ -340,12 +345,14 @@ internal class Program
         List<Type.Condition>? conditionEnum = ParseCondition(condition);
         List<Type.Genre>? genreEnum = ParseGenre(genre);
 
-        List<BoardGame>? boardGames = _boardGameList.Search(title, genreEnum, variant, conditionEnum, price);
+        ICollection<BoardGame> filteredBoardGames = _boardGameList.BoardGames.Where(x => x.Title != null).ToList();
+        filteredBoardGames = _boardGameList.FilterByTitle(title, filteredBoardGames);
+        filteredBoardGames = _boardGameList.FilterByGenre(genreEnum, filteredBoardGames);
+        filteredBoardGames = _boardGameList.FilterByVariant(variant, filteredBoardGames);
+        filteredBoardGames = _boardGameList.FilterByCondition(conditionEnum, filteredBoardGames);
+        filteredBoardGames = _boardGameList.FilterByPrice(price, filteredBoardGames);
 
-        ShowBoardGame(boardGames);
-
-        // Search
-        return boardGames;
+        ShowBoardGame(filteredBoardGames);
     }
     /// <summary>
     /// Displays a report of board games sorted by title.
@@ -616,7 +623,6 @@ internal class Program
     /// </summary>
     static void MenuBoardGame()
     {
-        List<BoardGame>? boardGames;
         do
         {
             Console.Clear();
@@ -625,7 +631,7 @@ internal class Program
             menuItems.Add(new MenuItem("Vælg spil", () => MenuChooseBoardGame()));
             menuItems.Add(new MenuItem("Tilføj spil", AddBoardGame));
             menuItems.Add(new MenuItem("Tilføj variant", () => AddBoardGameVariant()));
-            menuItems.Add(new MenuItem("Søg", new Action(() => boardGames = SearchBoardGame())));
+            menuItems.Add(new MenuItem("Søg", new Action(() => SearchBoardGame())));
             MenuPaginator menu = new(menuItems, 10);
             if (menu.menuItem != null && menu.menuItem.Action is Action action)
             {
@@ -684,9 +690,7 @@ internal class Program
 
     static void Main(string[] args)
     {
-#if !DEBUG
         JsonFileHandler.Instance.ImportData(DATA_JSON_FILE);
-#endif
         //Login();
         MenuMain();
         JsonFileHandler.Instance.ExportData(DATA_JSON_FILE);
