@@ -25,6 +25,7 @@ public sealed class BoardGameList
         }
     } ///> Singleton instance of the BoardGameList
 
+    int _index = 0;
     public List<BoardGame> BoardGames { get; set; }
 
     [JsonConstructor]
@@ -41,7 +42,18 @@ public sealed class BoardGameList
     /// </summary>
     public void Add(BoardGame boardGame)
     {
-        BoardGames.Add(boardGame);
+        Guid guid = Guid.NewGuid();
+        do
+        {
+            guid = Guid.NewGuid();
+        } while (BoardGames.Any(bg => bg.Guid == guid));
+        boardGame.SetGuid(guid);
+        this.BoardGames.Add(boardGame);
+    }
+
+    public void Add(BoardGameVariant boardGameVariant, Guid guid)
+    {
+        BoardGames.Where(x => x.Guid == guid).First().Variants.Add(boardGameVariant);
     }
 
     public void Clear()
@@ -149,6 +161,11 @@ public sealed class BoardGameList
         return games;
     }
 
+    public BoardGame? GetBoardGameById(Guid guid)
+    {
+        return BoardGames.Where(x => x.Guid == guid).FirstOrDefault();
+    }
+
     /// <summary>
     /// Søg efter brætspil
     /// </summary>
@@ -254,6 +271,7 @@ public sealed class BoardGameList
     {
         BoardGames.Remove(boardGame);
     }
+
 #if DEBUG
     private void Seed()
     {
@@ -270,7 +288,7 @@ public sealed class BoardGameList
         boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Brugt).First().Price = 150;
         boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Slidt).First().Quantity = 2;
         boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Slidt).First().Price = 125;
-        BoardGames.Add(new BoardGame(1, "Catan", new List<BoardGameVariant> { boardGameVariant }, new List<Type.Genre> { Type.Genre.Strategi }));
+        BoardGames.Add(new BoardGame("Catan", new List<BoardGameVariant> { boardGameVariant }, new List<Type.Genre> { Type.Genre.Strategi }));
 
         boardGameVariant = new BoardGameVariant("", "1-4", new ConditionList());
         boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Ny).First().Quantity = 0;
@@ -316,7 +334,7 @@ public sealed class BoardGameList
         boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Slidt).First().Quantity = 1;
         boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Slidt).First().Price = 100;
         boardGameVariants.Add(boardGameVariant);
-        BoardGames.Add(new BoardGame(2, "Ticket to Ride", boardGameVariants, new List<Type.Genre> { Type.Genre.Strategi }));
+        BoardGames.Add(new BoardGame("Ticket to Ride", boardGameVariants, new List<Type.Genre> { Type.Genre.Strategi }));
     }
 #endif
 }
