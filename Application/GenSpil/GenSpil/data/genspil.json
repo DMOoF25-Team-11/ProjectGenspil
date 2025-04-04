@@ -1,46 +1,247 @@
 {
-    "Version": "1.0",
-    "BoardGames": {
-        "BoardGames": [
-            {
-                "BoardGameID": 1,
-                "Title": "Catan",
-                "Variants": [
-                    {
-                        "Title": "Standard",
-                        "ConditionList": {
-                            "Conditions": [
-                                {
-                                    "ConditionEnum": "Ny",
-                                    "Quantity": 5,
-                                    "Price": 250
-                                },
-                                {
-                                    "ConditionEnum": "Brugt",
-                                    "Quantity": 0,
-                                    "Price": 0
-                                },
-                                {
-                                    "ConditionEnum": "God",
-                                    "Quantity": 1,
-                                    "Price": 100
-                                },
-                                {
-                                    "ConditionEnum": "Slidt",
-                                    "Quantity": 2,
-                                    "Price": 0
-                                }
-                            ]
-                        }
-                    }
-                ],
-                "Genre": [
-                    "Strategi"
-                ]
+  "Version": "1.0",
+  "BoardGames": {
+    "BoardGames": [
+      {
+        "Guid": "00000000-0000-0000-0000-000000000000",
+        "Title": "Catan",
+        "Variants": [
+          {
+            "Title": "",
+            "NumbersOfPlayers": "1-4",
+            "ConditionList": {
+              "Conditions": [
+                {
+                  "ConditionEnum": "Ny",
+                  "Quantity": 5,
+                  "Price": 200
+                },
+                {
+                  "ConditionEnum": "Brugt",
+                  "Quantity": 0,
+                  "Price": 150
+                },
+                {
+                  "ConditionEnum": "God",
+                  "Quantity": 1,
+                  "Price": 175
+                },
+                {
+                  "ConditionEnum": "Slidt",
+                  "Quantity": 2,
+                  "Price": 125
+                },
+                {
+                  "ConditionEnum": "Reparation",
+                  "Quantity": 0,
+                  "Price": 0
+                }
+              ]
             }
+          }
+        ],
+        "Genre": [
+          "Strategi"
         ]
-    },
-    "Users": {
-        "Users": []
-    }
+      },
+      {
+        "Guid": "00000000-0000-0000-0000-000000000000",
+        "Title": "Ticket to Ride",
+        "Variants": [
+          {
+            "Title": "",
+            "NumbersOfPlayers": "1-4",
+            "ConditionList": {
+              "Conditions": [
+                {
+                  "ConditionEnum": "Ny",
+                  "Quantity": 0,
+                  "Price": 250
+                },
+                {
+                  "ConditionEnum": "Brugt",
+                  "Quantity": 0,
+                  "Price": 200
+                },
+                {
+                  "ConditionEnum": "God",
+                  "Quantity": 1,
+                  "Price": 220
+                },
+                {
+                  "ConditionEnum": "Slidt",
+                  "Quantity": 0,
+                  "Price": 100
+                },
+                {
+                  "ConditionEnum": "Reparation",
+                  "Quantity": 0,
+                  "Price": 0
+                }
+              ]
+            }
+          },
+          {
+            "Title": "Europe",
+            "NumbersOfPlayers": "1-4",
+            "ConditionList": {
+              "Conditions": [
+                {
+                  "ConditionEnum": "Ny",
+                  "Quantity": 0,
+                  "Price": 250
+                },
+                {
+                  "ConditionEnum": "Brugt",
+                  "Quantity": 2,
+                  "Price": 200
+                },
+                {
+                  "ConditionEnum": "God",
+                  "Quantity": 0,
+                  "Price": 220
+                },
+                {
+                  "ConditionEnum": "Slidt",
+                  "Quantity": 1,
+                  "Price": 100
+                },
+                {
+                  "ConditionEnum": "Reparation",
+                  "Quantity": 0,
+                  "Price": 0
+                }
+              ]
+            }
+          },
+          {
+            "Title": "M\u00E4rklin",
+            "NumbersOfPlayers": "1-4",
+            "ConditionList": {
+              "Conditions": [
+                {
+                  "ConditionEnum": "Ny",
+                  "Quantity": 0,
+                  "Price": 250
+                },
+                {
+                  "ConditionEnum": "Brugt",
+                  "Quantity": 2,
+                  "Price": 200
+                },
+                {
+                  "ConditionEnum": "God",
+                  "Quantity": 0,
+                  "Price": 220
+                },
+                {
+                  "ConditionEnum": "Slidt",
+                  "Quantity": 1,
+                  "Price": 100
+                },
+                {
+                  "ConditionEnum": "Reparation",
+                  "Quantity": 0,
+                  "Price": 0
+                }
+              ]
+            }
+          },
+          {
+            "Title": "Nordic Countries",
+            "NumbersOfPlayers": "1-4",
+            "ConditionList": {
+              "Conditions": [
+                {
+                  "ConditionEnum": "Ny",
+                  "Quantity": 0,
+                  "Price": 250
+                },
+                {
+                  "ConditionEnum": "Brugt",
+                  "Quantity": 2,
+                  "Price": 200
+                },
+                {
+                  "ConditionEnum": "God",
+                  "Quantity": 0,
+                  "Price": 220
+                },
+                {
+                  "ConditionEnum": "Slidt",
+                  "Quantity": 1,
+                  "Price": 100
+                },
+                {
+                  "ConditionEnum": "Reparation",
+                  "Quantity": 0,
+                  "Price": 0
+                }
+              ]
+            }
+          }
+        ],
+        "Genre": [
+          "Strategi"
+        ]
+      },
+      {
+        "Guid": "3de794ce-ae8d-4134-aae7-6f1500363a2e",
+        "Title": "Matador",
+        "Variants": [
+          {
+            "Title": "",
+            "NumbersOfPlayers": "2-6",
+            "ConditionList": {
+              "Conditions": [
+                {
+                  "ConditionEnum": "Ny",
+                  "Quantity": 0,
+                  "Price": 0
+                },
+                {
+                  "ConditionEnum": "Brugt",
+                  "Quantity": 0,
+                  "Price": 0
+                },
+                {
+                  "ConditionEnum": "God",
+                  "Quantity": 0,
+                  "Price": 0
+                },
+                {
+                  "ConditionEnum": "Slidt",
+                  "Quantity": 0,
+                  "Price": 0
+                },
+                {
+                  "ConditionEnum": "Reparation",
+                  "Quantity": 0,
+                  "Price": 0
+                }
+              ]
+            }
+          }
+        ],
+        "Genre": [
+          "Familie",
+          "Familie"
+        ]
+      }
+    ]
+  },
+  "Users": {
+    "Users": [
+      {
+        "Name": "admin",
+        "Password": "admin",
+        "Role": "Admin"
+      },
+      {
+        "Name": "user",
+        "Password": "user",
+        "Role": "User"
+      }
+    ]
+  }
 }

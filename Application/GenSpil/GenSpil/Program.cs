@@ -102,21 +102,28 @@ internal class Program
     /// Displays the details of a board game.
     /// </summary>
     /// <param name="boardGame">The board game to display.</param>
-    static void ShowBoardGame(BoardGame boardGame)
+    /// <returns>The displayed board game.</returns>
+    static BoardGame ShowBoardGame(BoardGame boardGame)
     {
+        int indent = 0;
         HeadLine(boardGame.Title);
         Console.WriteLine(boardGame.ToString());
         foreach (BoardGameVariant boardGameVariant in boardGame.Variants)
         {
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("Variant : " + boardGameVariant.ToString());
+            Console.ResetColor();
+            indent += 2;
             foreach (var conditions in boardGameVariant.ConditionList.Conditions)
             {
-                Console.WriteLine("Condition : " + conditions.ToString());
+                string indentString = new string(' ', indent);
+                Console.WriteLine(indentString + "Condition : " + conditions.ToString());
             }
+            indent -= 2;
         }
-
         Console.WriteLine("\nTryk på en tast for at fortsætte...");
         Console.ReadKey();
+        return boardGame;
     }
     /// <summary>
     /// Displays the details of a list of board games.
@@ -151,6 +158,7 @@ internal class Program
     /// </summary>
     static void AddBoardGame()
     {
+        BoardGame? boardGame;
         do
         {
             Console.Clear();
@@ -186,38 +194,83 @@ internal class Program
             List<Type.Genre>? genreEnum = ParseGenre(genre);
             if (genreEnum == null)
             {
-                Console.WriteLine("Ugyldig genre. Try again.");
+                ErrorMessage("Intet indtastet om genre.");
                 continue;
             }
+            if (title == null)
+            {
+                ErrorMessage("Intet indtastet om titel.");
+                continue;
+            }
+            // Check if title already exists
+            foreach (BoardGame item in _boardGameList.BoardGames)
+            {
+                if (item.Title == title)
+                {
+                    ErrorMessage("Brætspil med denne titel findes allerede.");
+                    continue;
+                }
+            }
+            // Add board game
+            boardGame = new BoardGame(title, new List<BoardGameVariant>(), genreEnum);
+            _boardGameList.Add(boardGame);
+            break;
         } while (true);
-        //BoardGame boardGame = new BoardGame(0, "Matador", new List<BoardGameVariant> { new BoardGameVariant("", new ConditionList()) }, [Type.Genre.Familie]);
-        //AddBoardGameVariant(boardGame);
-        throw new NotImplementedException();
+        AddBoardGameVariant(boardGame.Guid);
     }
     /// <summary>
     /// Prompts the user to add a new variant to a board game.
     /// </summary>
     /// <param name="boardGame">The board game to add a variant to.</param>
     /// <returns>The added board game variant.</returns>
-    static BoardGameVariant AddBoardGameVariant(BoardGame boardGame)
+    static void AddBoardGameVariant(Guid? guid = null)
     {
         int cTop;
-        int cInputLeft = 14;
-        string? variant;
-        Console.CursorVisible = true;
-        HeadLine($"Tilføj variant til {boardGame.Title}");
-        // Form
-        cTop = Console.CursorTop;
-        Console.Write("Variants");
-        Console.CursorLeft = cInputLeft - 2;
-        Console.WriteLine(":");
-        // User input
-        Console.SetCursorPosition(cInputLeft, cTop++);
-        variant = Console.ReadLine();
-        Console.CursorVisible = false;
-        // Add variant
-        //return boardGame.AddVariant(variant);
-        throw new NotImplementedException();
+        int cInputLeft = 27;
+        BoardGame? boardGame;
+        string? variantTitle;
+        string? numbersOfPlayers;
+        BoardGameVariant variant;
+
+        if (guid == null)
+            boardGame = MenuChooseBoardGame(false);
+        else
+            boardGame = _boardGameList.GetBoardGameById(guid.Value);
+        if (boardGame != null)
+        {
+            Console.CursorVisible = true;
+            HeadLine($"Tilføj variant til {boardGame.Title}");
+            // Form
+            cTop = Console.CursorTop;
+            Console.Write("Variant");
+            Console.CursorLeft = cInputLeft - 2;
+            Console.WriteLine(":");
+            Console.Write("Antal spillere (eks 1-4)");
+            Console.CursorLeft = cInputLeft - 2;
+            Console.WriteLine(":");
+            // User input
+            Console.SetCursorPosition(cInputLeft, cTop++);
+            variantTitle = ReadLineWithEscape();
+            Console.SetCursorPosition(cInputLeft, cTop++);
+            numbersOfPlayers = ReadLineWithEscape();
+            Console.CursorVisible = false;
+            if (variantTitle == null)
+            {
+                ErrorMessage("Intet indtastet om variant.");
+                return;
+            }
+            if (numbersOfPlayers == null)
+            {
+                ErrorMessage("Intet indtastet om antal spillere.");
+                return;
+            }
+            variant = new BoardGameVariant("", numbersOfPlayers, new ConditionList());
+            _boardGameList.Add(variant, boardGame.Guid);
+            return;
+        }
+        Console.WriteLine("Ingen brætspil valgt. Tryk på en tast for at fortsætte...");
+        Console.ReadKey();
+        return;
     }
     /// <summary>
     /// Removes a board game.
@@ -563,14 +616,15 @@ internal class Program
     /// </summary>
     static void MenuBoardGame()
     {
-        List<BoardGame> boardGames;
+        List<BoardGame>? boardGames;
         do
         {
             Console.Clear();
             HeadLine("Brætspil menu");
             List<MenuItem> menuItems = new();
-            menuItems.Add(new MenuItem("Vælg spil", MenuChooseBoardGame));
+            menuItems.Add(new MenuItem("Vælg spil", () => MenuChooseBoardGame()));
             menuItems.Add(new MenuItem("Tilføj spil", AddBoardGame));
+            menuItems.Add(new MenuItem("Tilføj variant", () => AddBoardGameVariant()));
             menuItems.Add(new MenuItem("Søg", new Action(() => boardGames = SearchBoardGame())));
             MenuPaginator menu = new(menuItems, 10);
             if (menu.menuItem != null && menu.menuItem.Action is Action action)
@@ -590,15 +644,16 @@ internal class Program
     /// Item with it action is returned.
     /// Then we execute the action.
     /// </summary>
-    static void MenuChooseBoardGame()
+    static BoardGame? MenuChooseBoardGame(bool ShowVariants = true)
     {
+        BoardGame? result = null;
         string prefix = "";
-        do
+        Console.Clear();
+        HeadLine("Vælg spil");
+        List<MenuItem> menuItems = new();
+        foreach (BoardGame boardGame in _boardGameList.BoardGames.OrderBy(bg => bg.Title).ToList())
         {
-            Console.Clear();
-            HeadLine("Vælg spil");
-            List<MenuItem> menuItems = new();
-            foreach (BoardGame boardGame in _boardGameList.BoardGames.OrderBy(bg => bg.Title).ToList())
+            if (ShowVariants)
             {
                 foreach (BoardGameVariant boardGameVariant in boardGame.Variants)
                 {
@@ -609,12 +664,21 @@ internal class Program
                     menuItems.Add(new MenuItem(boardGame.Title + prefix + boardGameVariant.Title, (() => ShowBoardGameVariant(boardGame, boardGameVariant))));
                 }
             }
-            MenuPaginator menu = new(menuItems, 10);
-            if (menu.menuItem != null && menu.menuItem.Action is Action action)
-                action();
             else
-                return;
-        } while (true);
+            {
+                menuItems.Add(new MenuItem(boardGame.Title, (() => result = ShowBoardGame(boardGame))));
+            }
+        }
+        MenuPaginator menu = new(menuItems, 10);
+        if (menu.menuItem != null && menu.menuItem.Action is Action action)
+        {
+            action();
+            return result;
+        }
+        else
+        {
+            return null;
+        }
     }
     #endregion menu
 
@@ -623,7 +687,7 @@ internal class Program
 #if !DEBUG
         JsonFileHandler.Instance.ImportData(DATA_JSON_FILE);
 #endif
-        Login();
+        //Login();
         MenuMain();
         JsonFileHandler.Instance.ExportData(DATA_JSON_FILE);
     }
