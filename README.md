@@ -43,7 +43,6 @@ ProjectGenspil
 | Martin H L    | [mailto](mailto:mhli71391@edu.ucl.dk) |
 | Jens T N      | [mailto](mailto:jtni71354@edu.ucl.dk) |
 | Cecilie S M   | [mailto](mailto:csmo71359@edu.ucl.dk) |
-| Anna B C      | [mailto](mailto:abco71356@edu.ucl.dk) |
 | Mikkel S Ø J  | [mailto](mailto:msoj71393@edu.ucl.dk) |
 | Sabine S J    | [mailto](mailto:ssje71367@edu.ucl.dk) |
 

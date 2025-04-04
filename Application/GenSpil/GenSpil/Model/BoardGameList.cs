@@ -189,6 +189,7 @@ public sealed class BoardGameList
                 if (filteredConditions.Any())
                 {
                     var filteredConditionList = new ConditionList();
+                    filteredConditionList.Conditions.Clear(); // Clear conditions before adding filtered ones
                     foreach (var cond in filteredConditions)
                     {
                         filteredConditionList.Conditions.Add(cond);
