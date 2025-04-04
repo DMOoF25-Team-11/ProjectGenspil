@@ -101,7 +101,7 @@ public sealed class BoardGameList
         // Filter Variant
         if (variant != null & variant != "")
         {
-            var boardGame = BoardGames.Where(x => x.Variants.Any(v => v.Title.Contains(variant, StringComparison.OrdinalIgnoreCase))).ToList();
+            var boardGame = BoardGames.Where(x => x.Variants.Any(v => v.Title.Contains(variant!, StringComparison.OrdinalIgnoreCase))).ToList();
             if (boardGame.Count == 0)
             {
                 return new List<BoardGame>();
@@ -129,7 +129,7 @@ public sealed class BoardGameList
     public IEnumerable<BoardGame> FindByPrice(string? price, IEnumerable<BoardGame> games)
     {
         // Filter Price
-        if (price != null & price != "")
+        if (price != null && price != "")
         {
             string priceOperator;
             if (price.Contains(">=") | price.Contains("=>"))
