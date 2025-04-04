@@ -275,66 +275,34 @@ public sealed class BoardGameList
 #if DEBUG
     private void Seed()
     {
-        BoardGameVariant boardGameVariant;
-        List<BoardGameVariant> boardGameVariants = new List<BoardGameVariant>();
+        //BoardGame boardGame;
+        //BoardGameVariant boardGameVariant;
+        //List<BoardGameVariant> boardGameVariants = new List<BoardGameVariant>();
 
-        Console.WriteLine("Seeding board games...");
-        boardGameVariant = new BoardGameVariant("", "1-4", new ConditionList());
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Ny).First().Quantity = 5;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Ny).First().Price = 200;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.God).First().Quantity = 1;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.God).First().Price = 175;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Brugt).First().Quantity = 0;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Brugt).First().Price = 150;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Slidt).First().Quantity = 2;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Slidt).First().Price = 125;
-        BoardGames.Add(new BoardGame("Catan", new List<BoardGameVariant> { boardGameVariant }, new List<Type.Genre> { Type.Genre.Strategi }));
+        //Console.WriteLine("Seeding board games...");
+        //boardGame = new BoardGame("Catan", new List<Type.Genre> { Type.Genre.Strategi });
+        //Add(boardGame);
+        //boardGameVariant = new BoardGameVariant("Catan", "3-4", new ConditionList());
+        //Add(boardGameVariant, boardGame.Guid);
 
-        boardGameVariant = new BoardGameVariant("", "1-4", new ConditionList());
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Ny).First().Quantity = 0;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Ny).First().Price = 250;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.God).First().Quantity = 1;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.God).First().Price = 220;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Brugt).First().Quantity = 0;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Brugt).First().Price = 200;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Slidt).First().Quantity = 0;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Slidt).First().Price = 100;
-        boardGameVariants.Add(boardGameVariant);
+        //boardGame = new BoardGame("Ticket to Ride", new List<Type.Genre> { Type.Genre.Strategi });
+        //Add(boardGame);
+        //boardGameVariant = new BoardGameVariant("", "2-5", new ConditionList());
+        //boardGameVariant.ConditionList.SetPrice(Type.Condition.Ny, 200);
+        //boardGameVariant.ConditionList.SetQuantity(Type.Condition.Ny, 1);
+        //boardGameVariant.ConditionList.SetPrice(Type.Condition.Brugt, 120);
+        //boardGameVariant.ConditionList.SetQuantity(Type.Condition.Brugt, 1);
+        //Add(boardGameVariant, boardGame.Guid);
 
-        boardGameVariant = new BoardGameVariant("Europe", "1-4", new ConditionList());
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Ny).First().Quantity = 0;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Ny).First().Price = 250;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.God).First().Quantity = 0;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.God).First().Price = 220;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Brugt).First().Quantity = 2;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Brugt).First().Price = 200;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Slidt).First().Quantity = 1;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Slidt).First().Price = 100;
-        boardGameVariants.Add(boardGameVariant);
+        //boardGameVariant = new BoardGameVariant("Europe", "2-5", new ConditionList());
+        //Add(boardGameVariant, boardGame.Guid);
 
-        boardGameVariant = new BoardGameVariant("Märklin", "1-4", new ConditionList());
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Ny).First().Quantity = 0;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Ny).First().Price = 250;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.God).First().Quantity = 0;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.God).First().Price = 220;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Brugt).First().Quantity = 2;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Brugt).First().Price = 200;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Slidt).First().Quantity = 1;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Slidt).First().Price = 100;
-        boardGameVariants.Add(boardGameVariant);
+        //boardGameVariant = new BoardGameVariant("Nordic Countries", "2-5", new ConditionList());
+        //Add(boardGameVariant, boardGame.Guid);
 
+        //boardGameVariant = new BoardGameVariant("Märklin", "2-5", new ConditionList());
+        //Add(boardGameVariant, boardGame.Guid);
 
-        boardGameVariant = new BoardGameVariant("Nordic Countries", "1-4", new ConditionList());
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Ny).First().Quantity = 0;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Ny).First().Price = 250;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.God).First().Quantity = 0;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.God).First().Price = 220;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Brugt).First().Quantity = 2;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Brugt).First().Price = 200;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Slidt).First().Quantity = 1;
-        boardGameVariant.ConditionList.Conditions.Where(c => c.ConditionEnum == Type.Condition.Slidt).First().Price = 100;
-        boardGameVariants.Add(boardGameVariant);
-        BoardGames.Add(new BoardGame("Ticket to Ride", boardGameVariants, new List<Type.Genre> { Type.Genre.Strategi }));
     }
 #endif
 }

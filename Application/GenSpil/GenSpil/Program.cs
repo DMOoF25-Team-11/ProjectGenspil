@@ -195,12 +195,12 @@ internal class Program
             if (genreEnum == null)
             {
                 ErrorMessage("Intet indtastet om genre.");
-                continue;
+                return;
             }
             if (title == null)
             {
                 ErrorMessage("Intet indtastet om titel.");
-                continue;
+                return;
             }
             // Check if title already exists
             foreach (BoardGame item in _boardGameList.BoardGames)
@@ -208,11 +208,11 @@ internal class Program
                 if (item.Title == title)
                 {
                     ErrorMessage("Brætspil med denne titel findes allerede.");
-                    continue;
+                    return;
                 }
             }
             // Add board game
-            boardGame = new BoardGame(title, new List<BoardGameVariant>(), genreEnum);
+            boardGame = new BoardGame(title, genreEnum);
             _boardGameList.Add(boardGame);
             break;
         } while (true);
@@ -264,7 +264,12 @@ internal class Program
                 ErrorMessage("Intet indtastet om antal spillere.");
                 return;
             }
+
             variant = new BoardGameVariant("", numbersOfPlayers, new ConditionList());
+            //foreach (var c in Type.Condition.GetValues(typeof(Type.Condition)))
+            //{
+            //    variant.ConditionList.Conditions.Add(new Condition((Type.Condition)c, 0, 0));
+            //}
             _boardGameList.Add(variant, boardGame.Guid);
             return;
         }
@@ -684,9 +689,9 @@ internal class Program
 
     static void Main(string[] args)
     {
-#if !DEBUG
+        //#if !DEBUG
         JsonFileHandler.Instance.ImportData(DATA_JSON_FILE);
-#endif
+        //#endif
         //Login();
         MenuMain();
         JsonFileHandler.Instance.ExportData(DATA_JSON_FILE);

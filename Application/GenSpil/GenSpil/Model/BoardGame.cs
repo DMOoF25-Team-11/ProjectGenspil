@@ -15,10 +15,17 @@ namespace GenSpil.Model
         /// <param name="title"></param>
         /// <param name="variants">List of game board variants</param>
         /// <param name="genre"></param>
-        public BoardGame(string title, List<BoardGameVariant> variants, List<Genre> genre)
+        public BoardGame(string title, List<Genre> genre, List<BoardGameVariant>? variants = null)
         {
             Title = title;
-            Variants = variants;
+            if (variants != null)
+            {
+                Variants = variants;
+            }
+            else
+            {
+                Variants = new List<BoardGameVariant>();
+            }
             Genre = genre;
         }
 
