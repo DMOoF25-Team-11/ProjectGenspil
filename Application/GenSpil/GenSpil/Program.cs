@@ -17,6 +17,9 @@ internal class Program
     static UserList _userList;
     static JsonFileHandler _jsonFileHandler = JsonFileHandler.Instance;
 
+    /// <summary>
+    /// Static constructor to initialize static fields.
+    /// </summary>
     static Program()
     {
         _boardGameList = BoardGameList.Instance;
@@ -25,13 +28,15 @@ internal class Program
         CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("da-DK");
         _auth = new Authentication();
     }
-
+    /// <summary>
+    /// Gets the version of the executing assembly.
+    /// </summary>
+    /// <returns>The version as a string.</returns>
     static string GetVersion()
     {
         Version? version = Assembly.GetExecutingAssembly().GetName().Version;
         return version != null ? $"{version.Major}.{version.Minor}" : "Unknown version";
     }
-
     /// <summary>
     /// Login with username and password
     /// </summary>
@@ -85,13 +90,18 @@ internal class Program
 
 
     }
-
+    /// <summary>
+    /// Logout the current user and prompt for login again.
+    /// </summary>
     static void Logout()
     {
         _auth.Logout();
         Login();
     }
-
+    /// <summary>
+    /// Displays the details of a board game.
+    /// </summary>
+    /// <param name="boardGame">The board game to display.</param>
     static void ShowBoardGame(BoardGame boardGame)
     {
         HeadLine(boardGame.Title);
@@ -108,7 +118,10 @@ internal class Program
         Console.WriteLine("\nTryk på en tast for at fortsætte...");
         Console.ReadKey();
     }
-
+    /// <summary>
+    /// Displays the details of a list of board games.
+    /// </summary>
+    /// <param name="boardGames">The list of board games to display.</param>
     static void ShowBoardGame(List<BoardGame> boardGames)
     {
         foreach (BoardGame boardGame in boardGames)
@@ -116,7 +129,11 @@ internal class Program
             ShowBoardGame(boardGame);
         }
     }
-
+    /// <summary>
+    /// Displays the details of a specific board game variant.
+    /// </summary>
+    /// <param name="boardGame">The board game to display.</param>
+    /// <param name="boardGameVariant">The variant of the board game to display.</param>
     static void ShowBoardGameVariant(BoardGame boardGame, BoardGameVariant boardGameVariant)
     {
         HeadLine(boardGame.Title);
@@ -129,7 +146,9 @@ internal class Program
         Console.WriteLine("\nTryk på en tast for at fortsætte...");
         Console.ReadKey();
     }
-
+    /// <summary>
+    /// Prompts the user to add a new board game.
+    /// </summary>
     static void AddBoardGame()
     {
         do
@@ -175,7 +194,11 @@ internal class Program
         //AddBoardGameVariant(boardGame);
         throw new NotImplementedException();
     }
-
+    /// <summary>
+    /// Prompts the user to add a new variant to a board game.
+    /// </summary>
+    /// <param name="boardGame">The board game to add a variant to.</param>
+    /// <returns>The added board game variant.</returns>
     static BoardGameVariant AddBoardGameVariant(BoardGame boardGame)
     {
         int cTop;
@@ -196,12 +219,18 @@ internal class Program
         //return boardGame.AddVariant(variant);
         throw new NotImplementedException();
     }
-
+    /// <summary>
+    /// Removes a board game.
+    /// </summary>
+    /// <param name="boardGame">The board game to remove.</param>
     static void RemoveBoardGame(BoardGame boardGame)
     {
         throw new NotImplementedException();
     }
-
+    /// <summary>
+    /// Prompts the user to search for board games based on various criteria.
+    /// </summary>
+    /// <returns>A list of board games that match the search criteria.</returns>
     static List<BoardGame>? SearchBoardGame()
     {
         int cTop;
@@ -265,12 +294,16 @@ internal class Program
         // Search
         return boardGames;
     }
-
+    /// <summary>
+    /// Displays a report of board games sorted by title.
+    /// </summary>
     static void ShowReportBoardGameSort()
     {
         throw new NotImplementedException();
     }
-
+    /// <summary>
+    /// Displays a report of board games sorted by genre.
+    /// </summary>
     static void ShowReportBoardGameSortTitle()
     {
         var sortedBoardGames = _boardGameList.BoardGames.OrderBy(bg => bg.Title).ToList();
@@ -279,7 +312,10 @@ internal class Program
             ShowBoardGame(boardGame);
         }
     }
-
+    /// <summary>
+    /// Displays a headline with the title and version of the program.
+    /// </summary>
+    /// <param name="headLine">The headline text to display.</param>
     static void ShowReportBoardGameSortGenre()
     {
         var sortedBoardGames = _boardGameList.BoardGames.OrderBy(bg => bg.Genre).ToList();
@@ -288,10 +324,12 @@ internal class Program
             ShowBoardGame(boardGame);
         }
     }
-
     /// <summary>
-    /// Display a headline with the title and version of the program.
+    /// Centers the given text within a specified width.
     /// </summary>
+    /// <param name="text">The text to center.</param>
+    /// <param name="width">The width within which to center the text.</param>
+    /// <returns>The centered text with padding.</returns>
     static void HeadLine(string headLine)
     {
         Console.Clear();
@@ -323,7 +361,11 @@ internal class Program
         int rightPadding = padding - leftPadding;
         return new string(' ', leftPadding) + text + new string(' ', rightPadding);
     }
-
+    /// <summary>
+    /// Reads a line of input from the console, with optional hiding of input characters.
+    /// </summary>
+    /// <param name="hideInput">Whether to hide the input characters (e.g., for passwords).</param>
+    /// <returns>The input string, or null if the escape key was pressed.</returns>
     static string? ReadLineWithEscape(bool hideInput = false)
     {
         StringBuilder input = new StringBuilder();
@@ -355,7 +397,11 @@ internal class Program
         Console.WriteLine();
         return input.ToString();
     }
-
+    /// <summary>
+    /// Parses a string of conditions into a list of Condition enums.
+    /// </summary>
+    /// <param name="condition">The string of conditions to parse.</param>
+    /// <returns>A list of Condition enums, or null if parsing failed.</returns>
     static List<Type.Condition>? ParseCondition(string? condition)
     {
         List<Type.Condition> list = new List<Type.Condition>();
@@ -384,7 +430,11 @@ internal class Program
             return list;
         return null;
     }
-
+    /// <summary>
+    /// Parses a string of genres into a list of Genre enums.
+    /// </summary>
+    /// <param name="gerne">The string of genres to parse.</param>
+    /// <returns>A list of Genre enums, or null if parsing failed.</returns>
     static List<Type.Genre>? ParseGenre(string? gerne)
     {
         List<Type.Genre> list = new List<Type.Genre>();
@@ -417,7 +467,10 @@ internal class Program
             return list;
         return null;
     }
-
+    /// <summary>
+    /// Displays an error message in red text.
+    /// </summary>
+    /// <param name="message">The error message to display.</param>
     static void ErrorMessage(string message)
     {
         Console.ForegroundColor = ConsoleColor.Red;
@@ -458,12 +511,13 @@ internal class Program
                 return;
         } while (true);
     }
-
+    /// <summary>
+    /// Customer menu.
+    /// </summary>
     static void MenuCostumer()
     {
         throw new NotImplementedException();
     }
-
     /// <summary>
     /// Report menu
     /// (Action) is a delegate to a method with no parameters and no return value.
@@ -487,7 +541,9 @@ internal class Program
                 return;
         } while (true);
     }
-
+    /// <summary>
+    /// Admin menu.
+    /// </summary>
     static void MenuAdmin()
     {
         do
@@ -498,7 +554,6 @@ internal class Program
             throw new NotImplementedException();
         } while (true);
     }
-
     /// <summary>
     /// Board game menu
     /// (Action) is a delegate to a method with no parameters and no return value.
@@ -528,7 +583,6 @@ internal class Program
             }
         } while (true);
     }
-
     /// <summary>
     /// Choose board game menu
     /// (Action) is a delegate to a method with no parameters and no return value.
@@ -561,13 +615,6 @@ internal class Program
             else
                 return;
         } while (true);
-    }
-
-
-    // maybe tihs is not needed as a menu. Maybe it should be a method in the BoardGame class
-    static void MenuChooseBoardGameVariant()
-    {
-        throw new NotImplementedException();
     }
     #endregion menu
 
