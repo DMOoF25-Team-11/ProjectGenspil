@@ -5,7 +5,6 @@ using GenSpil.Handler;
 using GenSpil.Model;
 using TirsvadCLI.Frame;
 using TirsvadCLI.MenuPaginator;
-//using GenSpil.Model;
 
 namespace GenSpil;
 
@@ -15,22 +14,29 @@ internal class Program
     const string DATA_JSON_FILE = "./data/genspil.json";
     static BoardGameList _boardGameList;
     static Authentication _auth;
+    static UserList _userList;
     static JsonFileHandler _jsonFileHandler = JsonFileHandler.Instance;
 
+    /// <summary>
+    /// Static constructor to initialize static fields.
+    /// </summary>
     static Program()
     {
         _boardGameList = BoardGameList.Instance;
+        _userList = UserList.Instance;
         CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("da-DK");
         CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("da-DK");
         _auth = new Authentication();
     }
-
+    /// <summary>
+    /// Gets the version of the executing assembly.
+    /// </summary>
+    /// <returns>The version as a string.</returns>
     static string GetVersion()
     {
         Version? version = Assembly.GetExecutingAssembly().GetName().Version;
         return version != null ? $"{version.Major}.{version.Minor}" : "Unknown version";
     }
-
     /// <summary>
     /// Login with username and password
     /// </summary>
@@ -38,6 +44,8 @@ internal class Program
     {
         int cTop;
         int cInputLeft = 14;
+        string? username;
+        string? password;
         do
         {
             Console.CursorVisible = true;
@@ -53,10 +61,10 @@ internal class Program
             Console.WriteLine(":");
             // user input 
             Console.SetCursorPosition(cInputLeft, cTop++);
-            string? username = Console.ReadLine();
+            username = ReadLineWithEscape();
             Console.SetCursorPosition(cInputLeft, cTop++);
             //TODO hide password input
-            string? password = Console.ReadLine();
+            password = ReadLineWithEscape(true);
             Console.CursorVisible = false;
             // Authenticate
             if (username == null || password == null)
@@ -82,13 +90,18 @@ internal class Program
 
 
     }
-
+    /// <summary>
+    /// Logout the current user and prompt for login again.
+    /// </summary>
     static void Logout()
     {
         _auth.Logout();
         Login();
     }
-
+    /// <summary>
+    /// Displays the details of a board game.
+    /// </summary>
+    /// <param name="boardGame">The board game to display.</param>
     static void ShowBoardGame(BoardGame boardGame)
     {
         HeadLine(boardGame.Title);
@@ -101,10 +114,14 @@ internal class Program
                 Console.WriteLine("Condition : " + conditions.ToString());
             }
         }
-        Console.WriteLine("Tryk på en tast for at fortsætte...");
+
+        Console.WriteLine("\nTryk på en tast for at fortsætte...");
         Console.ReadKey();
     }
-
+    /// <summary>
+    /// Displays the details of a list of board games.
+    /// </summary>
+    /// <param name="boardGames">The list of board games to display.</param>
     static void ShowBoardGame(List<BoardGame> boardGames)
     {
         foreach (BoardGame boardGame in boardGames)
@@ -112,7 +129,26 @@ internal class Program
             ShowBoardGame(boardGame);
         }
     }
-
+    /// <summary>
+    /// Displays the details of a specific board game variant.
+    /// </summary>
+    /// <param name="boardGame">The board game to display.</param>
+    /// <param name="boardGameVariant">The variant of the board game to display.</param>
+    static void ShowBoardGameVariant(BoardGame boardGame, BoardGameVariant boardGameVariant)
+    {
+        HeadLine(boardGame.Title);
+        Console.WriteLine(boardGame.ToString());
+        Console.WriteLine("Variant : " + boardGameVariant.ToString());
+        foreach (var conditions in boardGameVariant.ConditionList.Conditions)
+        {
+            Console.WriteLine("Condition : " + conditions.ToString());
+        }
+        Console.WriteLine("\nTryk på en tast for at fortsætte...");
+        Console.ReadKey();
+    }
+    /// <summary>
+    /// Prompts the user to add a new board game.
+    /// </summary>
     static void AddBoardGame()
     {
         do
@@ -154,11 +190,15 @@ internal class Program
                 continue;
             }
         } while (true);
-        BoardGame boardGame = new BoardGame(0, "Matador", new List<BoardGameVariant> { new BoardGameVariant("", new ConditionList()) }, [Type.Genre.Familie]);
-        AddBoardGameVariant(boardGame);
+        //BoardGame boardGame = new BoardGame(0, "Matador", new List<BoardGameVariant> { new BoardGameVariant("", new ConditionList()) }, [Type.Genre.Familie]);
+        //AddBoardGameVariant(boardGame);
         throw new NotImplementedException();
     }
-
+    /// <summary>
+    /// Prompts the user to add a new variant to a board game.
+    /// </summary>
+    /// <param name="boardGame">The board game to add a variant to.</param>
+    /// <returns>The added board game variant.</returns>
     static BoardGameVariant AddBoardGameVariant(BoardGame boardGame)
     {
         int cTop;
@@ -179,12 +219,18 @@ internal class Program
         //return boardGame.AddVariant(variant);
         throw new NotImplementedException();
     }
-
-    static void RemoveBoardGame()
+    /// <summary>
+    /// Removes a board game.
+    /// </summary>
+    /// <param name="boardGame">The board game to remove.</param>
+    static void RemoveBoardGame(BoardGame boardGame)
     {
         throw new NotImplementedException();
     }
-
+    /// <summary>
+    /// Prompts the user to search for board games based on various criteria.
+    /// </summary>
+    /// <returns>A list of board games that match the search criteria.</returns>
     static List<BoardGame>? SearchBoardGame()
     {
         int cTop;
@@ -248,25 +294,42 @@ internal class Program
         // Search
         return boardGames;
     }
-
+    /// <summary>
+    /// Displays a report of board games sorted by title.
+    /// </summary>
     static void ShowReportBoardGameSort()
     {
         throw new NotImplementedException();
     }
-
+    /// <summary>
+    /// Displays a report of board games sorted by genre.
+    /// </summary>
     static void ShowReportBoardGameSortTitle()
     {
-        throw new NotImplementedException();
+        var sortedBoardGames = _boardGameList.BoardGames.OrderBy(bg => bg.Title).ToList();
+        foreach (var boardGame in sortedBoardGames)
+        {
+            ShowBoardGame(boardGame);
+        }
     }
-
+    /// <summary>
+    /// Displays a headline with the title and version of the program.
+    /// </summary>
+    /// <param name="headLine">The headline text to display.</param>
     static void ShowReportBoardGameSortGenre()
     {
-        throw new NotImplementedException();
+        var sortedBoardGames = _boardGameList.BoardGames.OrderBy(bg => bg.Genre).ToList();
+        foreach (var boardGame in sortedBoardGames)
+        {
+            ShowBoardGame(boardGame);
+        }
     }
-
     /// <summary>
-    /// Display a headline with the title and version of the program.
+    /// Centers the given text within a specified width.
     /// </summary>
+    /// <param name="text">The text to center.</param>
+    /// <param name="width">The width within which to center the text.</param>
+    /// <returns>The centered text with padding.</returns>
     static void HeadLine(string headLine)
     {
         Console.Clear();
@@ -298,8 +361,12 @@ internal class Program
         int rightPadding = padding - leftPadding;
         return new string(' ', leftPadding) + text + new string(' ', rightPadding);
     }
-
-    static string? ReadLineWithEscape()
+    /// <summary>
+    /// Reads a line of input from the console, with optional hiding of input characters.
+    /// </summary>
+    /// <param name="hideInput">Whether to hide the input characters (e.g., for passwords).</param>
+    /// <returns>The input string, or null if the escape key was pressed.</returns>
+    static string? ReadLineWithEscape(bool hideInput = false)
     {
         StringBuilder input = new StringBuilder();
         ConsoleKeyInfo keyInfo;
@@ -317,13 +384,24 @@ internal class Program
             else if (keyInfo.Key != ConsoleKey.Backspace)
             {
                 input.Append(keyInfo.KeyChar);
-                Console.Write(keyInfo.KeyChar);
+                if (hideInput)
+                {
+                    Console.Write('*');
+                }
+                else
+                {
+                    Console.Write(keyInfo.KeyChar);
+                }
             }
         }
         Console.WriteLine();
         return input.ToString();
     }
-
+    /// <summary>
+    /// Parses a string of conditions into a list of Condition enums.
+    /// </summary>
+    /// <param name="condition">The string of conditions to parse.</param>
+    /// <returns>A list of Condition enums, or null if parsing failed.</returns>
     static List<Type.Condition>? ParseCondition(string? condition)
     {
         List<Type.Condition> list = new List<Type.Condition>();
@@ -352,7 +430,11 @@ internal class Program
             return list;
         return null;
     }
-
+    /// <summary>
+    /// Parses a string of genres into a list of Genre enums.
+    /// </summary>
+    /// <param name="gerne">The string of genres to parse.</param>
+    /// <returns>A list of Genre enums, or null if parsing failed.</returns>
     static List<Type.Genre>? ParseGenre(string? gerne)
     {
         List<Type.Genre> list = new List<Type.Genre>();
@@ -385,7 +467,10 @@ internal class Program
             return list;
         return null;
     }
-
+    /// <summary>
+    /// Displays an error message in red text.
+    /// </summary>
+    /// <param name="message">The error message to display.</param>
     static void ErrorMessage(string message)
     {
         Console.ForegroundColor = ConsoleColor.Red;
@@ -415,22 +500,24 @@ internal class Program
             menuItems.Add(new MenuItem("Brætspil", MenuBoardGame));
             menuItems.Add(new MenuItem("Kunde", MenuCostumer));
             menuItems.Add(new MenuItem("Rapporter", MenuReport));
-            menuItems.Add(new MenuItem("Admin", MenuAdmin));
+            if (_auth.GetRole(_auth.User) == Type.Role.Admin)
+                menuItems.Add(new MenuItem("Admin", MenuAdmin));
             menuItems.Add(new MenuItem("Logout", Logout));
             // Create a menu paginator
-            MenuPaginator menu = new(menuItems, 10);
+            MenuPaginator menu = new(menuItems, 10, true);
             if (menu.menuItem != null && menu.menuItem.Action is Action action)
                 action(); // Execute the action
             else
                 return;
         } while (true);
     }
-
+    /// <summary>
+    /// Customer menu.
+    /// </summary>
     static void MenuCostumer()
     {
         throw new NotImplementedException();
     }
-
     /// <summary>
     /// Report menu
     /// (Action) is a delegate to a method with no parameters and no return value.
@@ -454,7 +541,9 @@ internal class Program
                 return;
         } while (true);
     }
-
+    /// <summary>
+    /// Admin menu.
+    /// </summary>
     static void MenuAdmin()
     {
         do
@@ -465,7 +554,6 @@ internal class Program
             throw new NotImplementedException();
         } while (true);
     }
-
     /// <summary>
     /// Board game menu
     /// (Action) is a delegate to a method with no parameters and no return value.
@@ -495,7 +583,6 @@ internal class Program
             }
         } while (true);
     }
-
     /// <summary>
     /// Choose board game menu
     /// (Action) is a delegate to a method with no parameters and no return value.
@@ -505,14 +592,22 @@ internal class Program
     /// </summary>
     static void MenuChooseBoardGame()
     {
+        string prefix = "";
         do
         {
             Console.Clear();
             HeadLine("Vælg spil");
             List<MenuItem> menuItems = new();
-            foreach (BoardGame boardGame in _boardGameList.BoardGames)
+            foreach (BoardGame boardGame in _boardGameList.BoardGames.OrderBy(bg => bg.Title).ToList())
             {
-                menuItems.Add(new MenuItem(boardGame.Title, () => ShowBoardGame(boardGame)));
+                foreach (BoardGameVariant boardGameVariant in boardGame.Variants)
+                {
+                    if (boardGameVariant.Title == "")
+                        prefix = "";
+                    else
+                        prefix = " : ";
+                    menuItems.Add(new MenuItem(boardGame.Title + prefix + boardGameVariant.Title, (() => ShowBoardGameVariant(boardGame, boardGameVariant))));
+                }
             }
             MenuPaginator menu = new(menuItems, 10);
             if (menu.menuItem != null && menu.menuItem.Action is Action action)
@@ -520,13 +615,6 @@ internal class Program
             else
                 return;
         } while (true);
-    }
-
-
-    // maybe tihs is not needed as a menu. Maybe it should be a method in the BoardGame class
-    static void MenuChooseBoardGameVariant()
-    {
-        throw new NotImplementedException();
     }
     #endregion menu
 

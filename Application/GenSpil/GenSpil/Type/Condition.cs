@@ -8,6 +8,7 @@
         Ny,
         Brugt,
         God,
-        Slidt
+        Slidt,
+        Reparation
     }
 }

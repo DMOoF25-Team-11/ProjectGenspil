@@ -63,8 +63,6 @@ class BoardGameList {
     +Update(BoardGame: BoardGame): void
     +GetBoardGamesByGenre(genre: Genre): list<BoardGame>
     +GetBoardGamesByTitle(title: string): list<BoardGame>
-    +GetReserved(): Reserved
-    +SetReserved(Reserved: Reserved): void
     +GenerateID(): int
     +Seek(title: string, condition: Condition, price: decimal, genre: Genre, numberPlayers: int): list<BoardGameVariant>
 }
@@ -91,9 +89,12 @@ med tilstand og lager."
 class BoardGameVariant {
     -list<Condition> _condition
     string Variant
+    string numberOfPlayer // antal spillere
     +BoardGameVariant(BoardGame: BoardGame, Variant: string, Condition: Condition): void
     +Condition(): Condition
     +Condition(Condition: Condition): void
+    +GetReserved(): Reserved
+    +SetReserved(Reserved: Reserved): void
 }
 note for BoardGameVariant "Brætspil varianter"
 
@@ -101,7 +102,6 @@ class Reserved {
     -DateTime _reservedDate
     -int _quantity
     -int _customerID
-    -int _boardGameID
     +Reserved(ReservedDate: DateTime, Quantity: int, CustomerID: int, BoardGameID: int): void
 }
 note for Reserved "Hvornår et brætspil er 
@@ -123,10 +123,10 @@ note for Condition "Brætspil tilstand og antal vi har"
 
 class ConditionEnum {
     <<enumeration>>
-    Sealed // helt ny
-    Good // god stand
-    Ok // lettere ridset
-    Fair // lidt skrammet
+    Ny // helt ny
+    God // god stand
+    Brugt // lettere ridset
+    Slidt // lidt skrammet
     Reparation // reparation
 }
 note for ConditionEnum "Brætspil tilstand"
@@ -134,21 +134,22 @@ note for ConditionEnum "Brætspil tilstand"
 
 class Genre {
     <<enumeration>>
-    Strategy // strategi
-    Party // fest
-    Family // familie
-    Abstract // abstrakt
-    Thematic // tematisk
-    Children // børn
+    Quiz
+    Strategi
+    Familie
+    Selskab
+    Rollespil
+    Børnespil
 }
 note for Genre "Brætspil genre"
 
 CustomerList "1" *-- "*" Customer : Indeholder
 Customer "*" -- "*" BoardGameList : Køber / reservere
 BoardGameList "1" *-- "*" BoardGame : Indeholder
-BoardGameList "1" *-- "*" Reserved : Reserveres
 BoardGame "1" *-- "*" BoardGameVariant : Indeholder
-BoardGameVariant "*" -- "1" Condition : Har
+BoardGameVariant "1" *-- "*" Reserved : Reserveres
+Customer "1" o-- "*" Reserved : Reserverer
+BoardGameVariant "*" *-- "1" Condition : Har
 BoardGame "*" -- "*" Genre : Har
 UserList "1" *-- "*" User : Indeholder
 User "1" -- "1" Role : Har
