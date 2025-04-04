@@ -77,22 +77,20 @@ public sealed class BoardGameList
 
     public IEnumerable<BoardGame> FindByTitle(string? title, IEnumerable<BoardGame> games)
     {
-        // Filter Title
-        //if (title != null & title != "")
-        //{
-        //    var boardGame = games.Where(x => x.Title.Contains(title!, StringComparison.OrdinalIgnoreCase)).ToList();
-        //    if (boardGame.Count == 0)
-        //    {
-        //        return new List<BoardGame>();
-        //    }
-        //    return boardGame;
-        //}
+        if (title != null && title != "")
+        {
+            games = games.Where(x => x.Title.Contains(title!, StringComparison.OrdinalIgnoreCase)).ToList();
+            if (games.Count() == 0)
+            {
+                return new List<BoardGame>();
+            }
+            return games;
+        }
         return games;
     }
 
     public IEnumerable<BoardGame> FindByGenre(List<Type.Genre>? genre, IEnumerable<BoardGame> games)
     {
-        // Filter Genre
         //if (genre != null)
         //{
         //    var boardGame = BoardGames.Where(x => x.Genre.Any(g => genre.Contains(g))).ToList();
