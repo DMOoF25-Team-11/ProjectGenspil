@@ -75,92 +75,142 @@ public sealed class BoardGameList
         return result;
     }
 
-    public ICollection<BoardGame> FindByTitle(string? title, ICollection<BoardGame> games)
+    public ICollection<BoardGame> FilterByTitle(string? title, ICollection<BoardGame> games)
     {
-        if (title != null && title != "")
+        if (!string.IsNullOrEmpty(title))
         {
-            games = games.Where(x => x.Title.Contains(title!, StringComparison.OrdinalIgnoreCase)).ToList();
-            if (games.Count() == 0)
+            games = games.Where(x => x.Title.Contains(title, StringComparison.OrdinalIgnoreCase)).ToList();
+            if (games.Count == 0)
             {
                 return new List<BoardGame>();
             }
-            return games;
         }
         return games;
     }
 
-    public ICollection<BoardGame> FindByGenre(List<Type.Genre>? genre, ICollection<BoardGame> games)
+    public ICollection<BoardGame> FilterByGenre(List<Type.Genre>? genre, ICollection<BoardGame> games)
     {
         if (genre != null)
         {
             games = games.Where(x => x.Genre.Any(g => genre.Contains(g))).ToList();
-            if (games.Count() == 0)
+            if (games.Count == 0)
             {
                 return new List<BoardGame>();
             }
+        }
+        return games;
+    }
+
+    public ICollection<BoardGame> FilterByVariant(string? variant, ICollection<BoardGame> games)
+    {
+        if (string.IsNullOrEmpty(variant))
+        {
             return games;
         }
-        return games;
-    }
 
-    public ICollection<BoardGame> FindByVariant(string? variant, ICollection<BoardGame> games)
-    {
-        List<BoardGameVariant> removeVariant = [];
-        List<BoardGame> removeBoardGame = [];
-        if (variant != null && variant != "")
+        var filteredGames = new List<BoardGame>();
+
+        foreach (var game in games)
         {
-            for (int i = 0; i < games.Count(); i++)
+            var filteredVariants = game.Variants.Where(v => v.Title.Contains(variant, StringComparison.OrdinalIgnoreCase)).ToList();
+            if (filteredVariants.Any())
             {
-                for (int j = 0; j < games.ElementAt(i).Variants.Count; ++j)
-                    if (!games.ElementAt(i).Variants[j].Title.Contains(variant))
-                        removeVariant.Add(games.ElementAt(i).Variants[j]);
-                removeVariant.Reverse();
-                foreach (BoardGameVariant item in removeVariant)
-                    games.ElementAt(i).Variants.Remove(item);
-                if (games.ElementAt(i).Variants.Count() == 0)
-                    removeBoardGame.Add(games.ElementAt(i));
+                var filteredGame = new BoardGame(game.Title, game.Genre, filteredVariants);
+                filteredGame.SetGuid(game.Guid);
+                filteredGames.Add(filteredGame);
             }
-            foreach (var item in removeBoardGame)
-                games.Remove(item);
         }
-        return games;
+
+        return filteredGames;
     }
 
-    public ICollection<BoardGame> FindByCondition(List<Type.Condition>? condition, ICollection<BoardGame> games)
+    //public ICollection<BoardGame> FindByVariant(string? variant, ICollection<BoardGame> games)
+    //{
+    //    List<BoardGameVariant> removeVariant = new List<BoardGameVariant>();
+    //    List<BoardGame> removeBoardGame = new List<BoardGame>();
+    //    if (variant != null && variant != "")
+    //    {
+    //        for (int i = 0; i < games.Count(); i++)
+    //        {
+    //            for (int j = 0; j < games.ElementAt(i).Variants.Count; ++j)
+    //                if (!games.ElementAt(i).Variants[j].Title.Contains(variant))
+    //                    removeVariant.Add(games.ElementAt(i).Variants[j]);
+    //            foreach (BoardGameVariant item in removeVariant)
+    //                games.ElementAt(i).Variants.Remove(item);
+    //            if (games.ElementAt(i).Variants.Count() == 0)
+    //                removeBoardGame.Add(games.ElementAt(i));
+    //        }
+    //        foreach (var item in removeBoardGame)
+    //            games.Remove(item);
+    //    }
+    //    return games;
+    //}
+
+    //public ICollection<BoardGame> FindByCondition(List<Type.Condition>? condition, ICollection<BoardGame> games)
+    //{
+    //    List<Condition> removeCondition = new List<Condition>();
+    //    List<BoardGame> removeBoardGame = new List<BoardGame>();
+    //    if (condition != null)
+    //    {
+    //        for (int i = 0; i < games.Count(); i++)
+    //        {
+    //            for (int j = 0; j < games.ElementAt(i).Variants.Count; ++j)
+    //            {
+    //                for (int k = 0; k < games.ElementAt(i).Variants[j].ConditionList.Conditions.Count(); ++k)
+    //                    if (!condition.Contains(games.ElementAt(i).Variants[j].ConditionList.Conditions.ElementAt(k).ConditionEnum))
+    //                        removeCondition.Add(games.ElementAt(i).Variants[j].ConditionList.Conditions.ElementAt(k));
+    //                foreach (var item in removeCondition)
+    //                    games.ElementAt(i).Variants[j].ConditionList.Conditions.Remove(item);
+    //            }
+    //        }
+    //    }
+    //    return games;
+    //}
+
+    public ICollection<BoardGame> FilterByCondition(List<Type.Condition>? condition, ICollection<BoardGame> games)
     {
-        // Filter Condition
-        //if (condition != null)
-        //{
-        //    var boardGame = BoardGames.Where(x => x.Variants.Any(v => v.ConditionList.Conditions.Any(c => condition.Contains(c.ConditionEnum)))).ToList();
-        //    if (boardGame.Count == 0)
-        //    {
-        //        return new List<BoardGame>();
-        //    }
-        //    return boardGame;
-        //}
-        return games;
+        if (condition == null || condition.Count == 0)
+        {
+            return games;
+        }
+
+        var filteredGames = new List<BoardGame>();
+
+        foreach (var game in games)
+        {
+            var filteredVariants = new List<BoardGameVariant>();
+
+            foreach (var variant in game.Variants)
+            {
+                var filteredConditions = variant.ConditionList.Conditions
+                    .Where(c => condition.Contains(c.ConditionEnum))
+                    .ToList();
+
+                if (filteredConditions.Any())
+                {
+                    var filteredConditionList = new ConditionList();
+                    foreach (var cond in filteredConditions)
+                    {
+                        filteredConditionList.Conditions.Add(cond);
+                    }
+                    var filteredVariant = new BoardGameVariant(variant.Title, variant.NumbersOfPlayers, filteredConditionList);
+                    filteredVariants.Add(filteredVariant);
+                }
+            }
+
+            if (filteredVariants.Any())
+            {
+                var filteredGame = new BoardGame(game.Title, game.Genre, filteredVariants);
+                filteredGame.SetGuid(game.Guid);
+                filteredGames.Add(filteredGame);
+            }
+        }
+
+        return filteredGames;
     }
 
-    public ICollection<BoardGame> FindByPrice(string? price, ICollection<BoardGame> games)
+    public ICollection<BoardGame> FilterByPrice(string? price, ICollection<BoardGame> games)
     {
-        // Filter Price
-        //if (price != null && price != "")
-        //{
-        //    string priceOperator;
-        //    if (price.Contains(">=") | price.Contains("=>"))
-        //        priceOperator = ">=";
-        //    else if (price.Contains("<=") | price.Contains("=<"))
-        //        priceOperator = "<=";
-        //    else
-        //        priceOperator = "=";
-        //    decimal priceValue = decimal.Parse(price);
-        //    var boardGame = BoardGames.Where(x => x.Variants.Any(v => v.ConditionList.Conditions.Any(c => c.Price == priceValue))).ToList();
-        //    if (boardGame.Count == 0)
-        //    {
-        //        return new List<BoardGame>();
-        //    }
-        //    return boardGame;
-        //}
         return games;
     }
 
@@ -176,95 +226,12 @@ public sealed class BoardGameList
     {
         lock (_lock)
         {
-            var filteredBoardGames = BoardGames as ICollection<BoardGame>;
-            filteredBoardGames = FindByTitle(title, filteredBoardGames);
-            filteredBoardGames = FindByGenre(genre, filteredBoardGames);
-            filteredBoardGames = FindByVariant(variant, filteredBoardGames);
-            filteredBoardGames = FindByCondition(condition, filteredBoardGames);
-            filteredBoardGames = FindByPrice(price, filteredBoardGames);
-            //// Filter Variant
-            //if (variant != null & variant != "")
-            //{
-            //    for (int i = 0; i < filteredBoardGames.Count(); i++)
-            //    {
-            //        var game = filteredBoardGames.ElementAt(i);
-            //        for (int j = 0; j < game.Variants.Count; j++)
-            //        {
-            //            var v = game.Variants.ElementAt(j);
-            //            if (!v.Title.Contains(variant, StringComparison.OrdinalIgnoreCase))
-            //            {
-            //                filteredBoardGames.ElementAt(i).Variants.Remove(v);
-            //            }
-            //        }
-            //    }
-            //    filteredBoardGames = filteredBoardGames.Where(x => x.Variants.Any(v => v.Title.Contains(variant, StringComparison.OrdinalIgnoreCase)));
-            //}
-            // Filter Condition
-            //if (condition != null)
-            //{
-            //    for (int i = 0; i < filteredBoardGames.Count(); i++)
-            //    {
-            //        var game = filteredBoardGames.ElementAt(i);
-            //        for (int j = 0; j < game.Variants.Count; j++)
-            //        {
-            //            var v = game.Variants.ElementAt(j);
-            //            List<Condition> itemsToRemove = new List<Condition>();
-            //            foreach (var c in filteredBoardGames.ElementAt(i).Variants.ElementAt(j).ConditionList.Conditions)
-            //            {
-            //                if (!condition.Contains(c.ConditionEnum))
-            //                {
-            //                    itemsToRemove.Add(c);
-            //                }
-            //            }
-            //            foreach (var item in itemsToRemove)
-            //            {
-            //                filteredBoardGames.ElementAt(i).Variants.ElementAt(j).ConditionList.Conditions.Remove(item);
-            //            }
-            //        }
-            //    }
-            //}
-            //if (price != null & price != "")
-            //{
-            //    string priceOperator;
-            //    if (price.Contains(">=") | price.Contains("=>"))
-            //        priceOperator = ">=";
-            //    else if (price.Contains("<=") | price.Contains("=<"))
-            //        priceOperator = "<=";
-            //    else
-            //        priceOperator = "=";
-            //    //    price = new string(price.Where(char.IsDigit).ToArray());
-            //    decimal priceValue = decimal.Parse(price);
-            //    for (int i = 0; i < filteredBoardGames.Count(); i++)
-            //    {
-            //        var game = filteredBoardGames.ElementAt(i);
-            //        for (int j = 0; j < game.Variants.Count; j++)
-            //        {
-            //            var v = game.Variants.ElementAt(j);
-            //            for (int k = 0; k < v.ConditionList.Conditions.Count; k++)
-            //            {
-            //                var c = v.ConditionList.Conditions.ElementAt(k);
-            //                {
-            //                    filteredBoardGames.ElementAt(i).Variants.ElementAt(j).ConditionList.Conditions.Remove(c);
-            //                }
-            //                if (!v.Title.Contains(variant, StringComparison.OrdinalIgnoreCase))
-            //                {
-            //                    filteredBoardGames.ElementAt(i).Variants.Remove(v);
-            //                }
-            //            }
-            //        }
-
-            //        //filteredBoardGames = filteredBoardGames.Where(x => x.Variants.Any(v => v.ConditionList.Any(c => c. >= decimal.Parse(price.Replace(">=", ""))));
-            //        //    }
-            //        //    else if (price.Contains("<="))
-            //        //    {
-            //        //        //filteredBoardGames = filteredBoardGames.Where(x => x.Variants.Any(v => v.Price <= decimal.Parse(price.Replace("<=", ""))));
-            //        //    }
-            //        //    else
-            //        //    {
-            //        //        //filteredBoardGames = filteredBoardGames.Where(x => x.Variants.Any(v => v.Price == decimal.Parse(price)));
-            //        // }
-            //    }
-            //}
+            ICollection<BoardGame> filteredBoardGames = BoardGames.Where(x => x.Title != null).ToList();
+            filteredBoardGames = FilterByTitle(title, filteredBoardGames);
+            filteredBoardGames = FilterByGenre(genre, filteredBoardGames);
+            filteredBoardGames = FilterByVariant(variant, filteredBoardGames);
+            filteredBoardGames = FilterByCondition(condition, filteredBoardGames);
+            filteredBoardGames = FilterByPrice(price, filteredBoardGames);
             return filteredBoardGames.ToList();
         }
     }
@@ -276,4 +243,6 @@ public sealed class BoardGameList
     {
         BoardGames.Remove(boardGame);
     }
+
+
 }

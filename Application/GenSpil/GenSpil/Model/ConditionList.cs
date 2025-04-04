@@ -1,23 +1,18 @@
-﻿namespace GenSpil.Model
+﻿using System.Text.Json.Serialization;
+
+namespace GenSpil.Model
 {
     public class ConditionList
     {
-        public Condition[] Conditions { get; private set; } = new Condition[5];
-
+        public ICollection<Condition> Conditions { get; private set; }
+        [JsonConstructor]
         public ConditionList()
         {
-            int i;
-            for (i = 0; i < Conditions.Length; i++)
+            Conditions = new List<Condition>();
+            foreach (Type.Condition condition in Enum.GetValues(typeof(Type.Condition)))
             {
-                Conditions[i] = new Condition((Type.Condition)i, 0, 0m); // Initialize each element
+                Conditions.Add(new Condition(condition, 0, 0m));
             }
-            //i = 0;
-            //foreach (Type.Condition condition in Enum.GetValues(typeof(Type.Condition)))
-            //{
-            //    Conditions[i].ConditionEnum = condition;
-            //    Conditions[i].Quantity = 0;
-            //    i++;
-            //}
         }
 
         public void SetPrice(Type.Condition condition, decimal price)
@@ -40,7 +35,7 @@
 
         public override string ToString()
         {
-            if (Conditions.Length == 0)
+            if (Conditions.Count == 0)
             {
                 return "Intet fundet.";
             }
