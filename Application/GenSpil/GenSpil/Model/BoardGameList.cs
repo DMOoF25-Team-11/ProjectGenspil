@@ -32,9 +32,6 @@ public sealed class BoardGameList
     BoardGameList()
     {
         BoardGames = new List<BoardGame>();
-#if DEBUG
-        Seed();
-#endif
     }
 
     /// <summary>
@@ -78,86 +75,86 @@ public sealed class BoardGameList
         return result;
     }
 
-    public static IEnumerable<BoardGame> FindByTitle(string? title, IEnumerable<BoardGame> games)
+    public IEnumerable<BoardGame> FindByTitle(string? title, IEnumerable<BoardGame> games)
     {
         // Filter Title
-        if (title != null & title != "")
-        {
-            var boardGame = games.Where(x => x.Title.Contains(title!, StringComparison.OrdinalIgnoreCase)).ToList();
-            if (boardGame.Count == 0)
-            {
-                return new List<BoardGame>();
-            }
-            return boardGame;
-        }
+        //if (title != null & title != "")
+        //{
+        //    var boardGame = games.Where(x => x.Title.Contains(title!, StringComparison.OrdinalIgnoreCase)).ToList();
+        //    if (boardGame.Count == 0)
+        //    {
+        //        return new List<BoardGame>();
+        //    }
+        //    return boardGame;
+        //}
         return games;
     }
 
     public IEnumerable<BoardGame> FindByGenre(List<Type.Genre>? genre, IEnumerable<BoardGame> games)
     {
         // Filter Genre
-        if (genre != null)
-        {
-            var boardGame = BoardGames.Where(x => x.Genre.Any(g => genre.Contains(g))).ToList();
-            if (boardGame.Count == 0)
-            {
-                return new List<BoardGame>();
-            }
-            return boardGame;
-        }
+        //if (genre != null)
+        //{
+        //    var boardGame = BoardGames.Where(x => x.Genre.Any(g => genre.Contains(g))).ToList();
+        //    if (boardGame.Count == 0)
+        //    {
+        //        return new List<BoardGame>();
+        //    }
+        //    return boardGame;
+        //}
         return games;
     }
 
     public IEnumerable<BoardGame> FindByVariant(string? variant, IEnumerable<BoardGame> games)
     {
         // Filter Variant
-        if (variant != null & variant != "")
-        {
-            var boardGame = BoardGames.Where(x => x.Variants.Any(v => v.Title.Contains(variant!, StringComparison.OrdinalIgnoreCase))).ToList();
-            if (boardGame.Count == 0)
-            {
-                return new List<BoardGame>();
-            }
-            return boardGame;
-        }
+        //if (variant != null & variant != "")
+        //{
+        //    var boardGame = BoardGames.Where(x => x.Variants.Any(v => v.Title.Contains(variant!, StringComparison.OrdinalIgnoreCase))).ToList();
+        //    if (boardGame.Count == 0)
+        //    {
+        //        return new List<BoardGame>();
+        //    }
+        //    return boardGame;
+        //}
         return games;
     }
 
     public IEnumerable<BoardGame> FindByCondition(List<Type.Condition>? condition, IEnumerable<BoardGame> games)
     {
         // Filter Condition
-        if (condition != null)
-        {
-            var boardGame = BoardGames.Where(x => x.Variants.Any(v => v.ConditionList.Conditions.Any(c => condition.Contains(c.ConditionEnum)))).ToList();
-            if (boardGame.Count == 0)
-            {
-                return new List<BoardGame>();
-            }
-            return boardGame;
-        }
+        //if (condition != null)
+        //{
+        //    var boardGame = BoardGames.Where(x => x.Variants.Any(v => v.ConditionList.Conditions.Any(c => condition.Contains(c.ConditionEnum)))).ToList();
+        //    if (boardGame.Count == 0)
+        //    {
+        //        return new List<BoardGame>();
+        //    }
+        //    return boardGame;
+        //}
         return games;
     }
 
     public IEnumerable<BoardGame> FindByPrice(string? price, IEnumerable<BoardGame> games)
     {
         // Filter Price
-        if (price != null && price != "")
-        {
-            string priceOperator;
-            if (price.Contains(">=") | price.Contains("=>"))
-                priceOperator = ">=";
-            else if (price.Contains("<=") | price.Contains("=<"))
-                priceOperator = "<=";
-            else
-                priceOperator = "=";
-            decimal priceValue = decimal.Parse(price);
-            var boardGame = BoardGames.Where(x => x.Variants.Any(v => v.ConditionList.Conditions.Any(c => c.Price == priceValue))).ToList();
-            if (boardGame.Count == 0)
-            {
-                return new List<BoardGame>();
-            }
-            return boardGame;
-        }
+        //if (price != null && price != "")
+        //{
+        //    string priceOperator;
+        //    if (price.Contains(">=") | price.Contains("=>"))
+        //        priceOperator = ">=";
+        //    else if (price.Contains("<=") | price.Contains("=<"))
+        //        priceOperator = "<=";
+        //    else
+        //        priceOperator = "=";
+        //    decimal priceValue = decimal.Parse(price);
+        //    var boardGame = BoardGames.Where(x => x.Variants.Any(v => v.ConditionList.Conditions.Any(c => c.Price == priceValue))).ToList();
+        //    if (boardGame.Count == 0)
+        //    {
+        //        return new List<BoardGame>();
+        //    }
+        //    return boardGame;
+        //}
         return games;
     }
 
@@ -174,9 +171,11 @@ public sealed class BoardGameList
         lock (_lock)
         {
             var filteredBoardGames = BoardGames.AsEnumerable();
-            filteredBoardGames = BoardGameList.FindByTitle(title, filteredBoardGames);
+            filteredBoardGames = FindByTitle(title, filteredBoardGames);
             filteredBoardGames = FindByGenre(genre, filteredBoardGames);
             filteredBoardGames = FindByVariant(variant, filteredBoardGames);
+            filteredBoardGames = FindByCondition(condition, filteredBoardGames);
+            filteredBoardGames = FindByPrice(price, filteredBoardGames);
             //// Filter Variant
             //if (variant != null & variant != "")
             //{
@@ -271,38 +270,4 @@ public sealed class BoardGameList
     {
         BoardGames.Remove(boardGame);
     }
-
-#if DEBUG
-    private void Seed()
-    {
-        //BoardGame boardGame;
-        //BoardGameVariant boardGameVariant;
-        //List<BoardGameVariant> boardGameVariants = new List<BoardGameVariant>();
-
-        //Console.WriteLine("Seeding board games...");
-        //boardGame = new BoardGame("Catan", new List<Type.Genre> { Type.Genre.Strategi });
-        //Add(boardGame);
-        //boardGameVariant = new BoardGameVariant("Catan", "3-4", new ConditionList());
-        //Add(boardGameVariant, boardGame.Guid);
-
-        //boardGame = new BoardGame("Ticket to Ride", new List<Type.Genre> { Type.Genre.Strategi });
-        //Add(boardGame);
-        //boardGameVariant = new BoardGameVariant("", "2-5", new ConditionList());
-        //boardGameVariant.ConditionList.SetPrice(Type.Condition.Ny, 200);
-        //boardGameVariant.ConditionList.SetQuantity(Type.Condition.Ny, 1);
-        //boardGameVariant.ConditionList.SetPrice(Type.Condition.Brugt, 120);
-        //boardGameVariant.ConditionList.SetQuantity(Type.Condition.Brugt, 1);
-        //Add(boardGameVariant, boardGame.Guid);
-
-        //boardGameVariant = new BoardGameVariant("Europe", "2-5", new ConditionList());
-        //Add(boardGameVariant, boardGame.Guid);
-
-        //boardGameVariant = new BoardGameVariant("Nordic Countries", "2-5", new ConditionList());
-        //Add(boardGameVariant, boardGame.Guid);
-
-        //boardGameVariant = new BoardGameVariant("Märklin", "2-5", new ConditionList());
-        //Add(boardGameVariant, boardGame.Guid);
-
-    }
-#endif
 }
