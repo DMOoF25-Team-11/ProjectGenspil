@@ -102,21 +102,28 @@ internal class Program
     /// Displays the details of a board game.
     /// </summary>
     /// <param name="boardGame">The board game to display.</param>
-    static void ShowBoardGame(BoardGame boardGame)
+    /// <returns>The displayed board game.</returns>
+    static BoardGame ShowBoardGame(BoardGame boardGame)
     {
+        int indent = 0;
         HeadLine(boardGame.Title);
         Console.WriteLine(boardGame.ToString());
         foreach (BoardGameVariant boardGameVariant in boardGame.Variants)
         {
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("Variant : " + boardGameVariant.ToString());
+            Console.ResetColor();
+            indent += 2;
             foreach (var conditions in boardGameVariant.ConditionList.Conditions)
             {
-                Console.WriteLine("Condition : " + conditions.ToString());
+                string indentString = new string(' ', indent);
+                Console.WriteLine(indentString + "Condition : " + conditions.ToString());
             }
+            indent -= 2;
         }
-
         Console.WriteLine("\nTryk på en tast for at fortsætte...");
         Console.ReadKey();
+        return boardGame;
     }
     /// <summary>
     /// Displays the details of a list of board games.
@@ -563,13 +570,13 @@ internal class Program
     /// </summary>
     static void MenuBoardGame()
     {
-        List<BoardGame> boardGames;
+        List<BoardGame>? boardGames;
         do
         {
             Console.Clear();
             HeadLine("Brætspil menu");
             List<MenuItem> menuItems = new();
-            menuItems.Add(new MenuItem("Vælg spil", MenuChooseBoardGame));
+            menuItems.Add(new MenuItem("Vælg spil", () => MenuChooseBoardGame()));
             menuItems.Add(new MenuItem("Tilføj spil", AddBoardGame));
             menuItems.Add(new MenuItem("Søg", new Action(() => boardGames = SearchBoardGame())));
             MenuPaginator menu = new(menuItems, 10);
@@ -590,8 +597,9 @@ internal class Program
     /// Item with it action is returned.
     /// Then we execute the action.
     /// </summary>
-    static void MenuChooseBoardGame()
+    static BoardGame? MenuChooseBoardGame(bool ShowVariants = true)
     {
+        BoardGame? result = null;
         string prefix = "";
         do
         {
@@ -600,20 +608,27 @@ internal class Program
             List<MenuItem> menuItems = new();
             foreach (BoardGame boardGame in _boardGameList.BoardGames.OrderBy(bg => bg.Title).ToList())
             {
-                foreach (BoardGameVariant boardGameVariant in boardGame.Variants)
+                if (ShowVariants)
                 {
-                    if (boardGameVariant.Title == "")
-                        prefix = "";
-                    else
-                        prefix = " : ";
-                    menuItems.Add(new MenuItem(boardGame.Title + prefix + boardGameVariant.Title, (() => ShowBoardGameVariant(boardGame, boardGameVariant))));
+                    foreach (BoardGameVariant boardGameVariant in boardGame.Variants)
+                    {
+                        if (boardGameVariant.Title == "")
+                            prefix = "";
+                        else
+                            prefix = " : ";
+                        menuItems.Add(new MenuItem(boardGame.Title + prefix + boardGameVariant.Title, (() => ShowBoardGameVariant(boardGame, boardGameVariant))));
+                    }
+                }
+                else
+                {
+                    menuItems.Add(new MenuItem(boardGame.Title, (() => result = ShowBoardGame(boardGame))));
                 }
             }
             MenuPaginator menu = new(menuItems, 10);
             if (menu.menuItem != null && menu.menuItem.Action is Action action)
                 action();
             else
-                return;
+                return result;
         } while (true);
     }
     #endregion menu
@@ -623,7 +638,7 @@ internal class Program
 #if !DEBUG
         JsonFileHandler.Instance.ImportData(DATA_JSON_FILE);
 #endif
-        Login();
+        //Login();
         MenuMain();
         JsonFileHandler.Instance.ExportData(DATA_JSON_FILE);
     }
