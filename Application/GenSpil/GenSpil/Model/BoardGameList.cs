@@ -75,7 +75,7 @@ public sealed class BoardGameList
         return result;
     }
 
-    public IEnumerable<BoardGame> FindByTitle(string? title, IEnumerable<BoardGame> games)
+    public ICollection<BoardGame> FindByTitle(string? title, ICollection<BoardGame> games)
     {
         if (title != null && title != "")
         {
@@ -89,36 +89,44 @@ public sealed class BoardGameList
         return games;
     }
 
-    public IEnumerable<BoardGame> FindByGenre(List<Type.Genre>? genre, IEnumerable<BoardGame> games)
+    public ICollection<BoardGame> FindByGenre(List<Type.Genre>? genre, ICollection<BoardGame> games)
     {
-        //if (genre != null)
-        //{
-        //    var boardGame = BoardGames.Where(x => x.Genre.Any(g => genre.Contains(g))).ToList();
-        //    if (boardGame.Count == 0)
-        //    {
-        //        return new List<BoardGame>();
-        //    }
-        //    return boardGame;
-        //}
+        if (genre != null)
+        {
+            games = games.Where(x => x.Genre.Any(g => genre.Contains(g))).ToList();
+            if (games.Count() == 0)
+            {
+                return new List<BoardGame>();
+            }
+            return games;
+        }
         return games;
     }
 
-    public IEnumerable<BoardGame> FindByVariant(string? variant, IEnumerable<BoardGame> games)
+    public ICollection<BoardGame> FindByVariant(string? variant, ICollection<BoardGame> games)
     {
-        // Filter Variant
-        //if (variant != null & variant != "")
-        //{
-        //    var boardGame = BoardGames.Where(x => x.Variants.Any(v => v.Title.Contains(variant!, StringComparison.OrdinalIgnoreCase))).ToList();
-        //    if (boardGame.Count == 0)
-        //    {
-        //        return new List<BoardGame>();
-        //    }
-        //    return boardGame;
-        //}
+        List<BoardGameVariant> removeVariant = [];
+        List<BoardGame> removeBoardGame = [];
+        if (variant != null && variant != "")
+        {
+            for (int i = 0; i < games.Count(); i++)
+            {
+                for (int j = 0; j < games.ElementAt(i).Variants.Count; ++j)
+                    if (!games.ElementAt(i).Variants[j].Title.Contains(variant))
+                        removeVariant.Add(games.ElementAt(i).Variants[j]);
+                removeVariant.Reverse();
+                foreach (BoardGameVariant item in removeVariant)
+                    games.ElementAt(i).Variants.Remove(item);
+                if (games.ElementAt(i).Variants.Count() == 0)
+                    removeBoardGame.Add(games.ElementAt(i));
+            }
+            foreach (var item in removeBoardGame)
+                games.Remove(item);
+        }
         return games;
     }
 
-    public IEnumerable<BoardGame> FindByCondition(List<Type.Condition>? condition, IEnumerable<BoardGame> games)
+    public ICollection<BoardGame> FindByCondition(List<Type.Condition>? condition, ICollection<BoardGame> games)
     {
         // Filter Condition
         //if (condition != null)
@@ -133,7 +141,7 @@ public sealed class BoardGameList
         return games;
     }
 
-    public IEnumerable<BoardGame> FindByPrice(string? price, IEnumerable<BoardGame> games)
+    public ICollection<BoardGame> FindByPrice(string? price, ICollection<BoardGame> games)
     {
         // Filter Price
         //if (price != null && price != "")
@@ -168,7 +176,7 @@ public sealed class BoardGameList
     {
         lock (_lock)
         {
-            var filteredBoardGames = BoardGames.AsEnumerable();
+            var filteredBoardGames = BoardGames as ICollection<BoardGame>;
             filteredBoardGames = FindByTitle(title, filteredBoardGames);
             filteredBoardGames = FindByGenre(genre, filteredBoardGames);
             filteredBoardGames = FindByVariant(variant, filteredBoardGames);
