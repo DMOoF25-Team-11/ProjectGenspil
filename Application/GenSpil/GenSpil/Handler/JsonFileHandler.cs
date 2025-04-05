@@ -1,10 +1,12 @@
-﻿//using GenSpil.Model;
-
 using System.Text.Json;
+using GenSpil.Model;
 
 namespace GenSpil.Handler;
 
-class JsonFileHandler
+/// <summary>
+/// JsonFileHandler class for handling JSON file operations.
+/// </summary>
+public class JsonFileHandler
 {
     private static JsonFileHandler? _instance;
     private static readonly object _lock = new object();
@@ -26,7 +28,7 @@ class JsonFileHandler
         }
     }
 
-    private readonly Version _version = new Version(1, 0); ///> The version of the JSON file.
+    private readonly Version _version = new Version(1, 0); ///> The _version of the JSON file.
     private readonly DataContainer _dataContainer = new DataContainer(); ///> The data container for the JSON file.
 
     /// <summary>
@@ -34,21 +36,23 @@ class JsonFileHandler
     /// </summary>
     public class DataContainer
     {
-        public Version? Version { get; set; }
-        //public BoardGameList? BoardGames { get; set; }
-        //public CustomerList? Customers { get; set; }
+        private Version _version;
+
+        public Version Version { get; set; }
+        public BoardGameList? BoardGames { get; set; }
+        public CustomerList? Customers { get; set; }
 
         public DataContainer()
         {
-            Version = null;
-            //BoardGames = null; // Instance of BoardGameList when the class is created.
+            Version = new Version(1, 0);
+            BoardGameList BoardGames = BoardGameList.Instance; // Instance of BoardGameList when the class is created.
             //Customers = null;  // Instance of CustomerList when the class is created.
         }
     }
 
     private JsonFileHandler()
     {
-        _dataContainer = new DataContainer
+        _dataContainer = new DataContainer()
         {
             Version = _version,
         };
@@ -82,8 +86,8 @@ class JsonFileHandler
             {
                 if (File.Exists(filename))
                 {
-                    //BoardGameList.Instance.Clear();
-                    //CustomerList.Instance.Clear();
+                    BoardGameList.Instance.Clear();
+                    CustomerList.Instance.Clear();
                     string jsonString = File.ReadAllText(filename);
                     var options = new JsonSerializerOptions { };
                     var data = JsonSerializer.Deserialize<DataContainer>(jsonString, options);
@@ -103,7 +107,7 @@ class JsonFileHandler
                     }
                     else
                     {
-                        Console.WriteLine("File version er ikke kompatible.");
+                        Console.WriteLine("File _version er ikke kompatible.");
                     }
                 }
             }
@@ -115,4 +119,5 @@ class JsonFileHandler
             }
         }
     }
+
 }
