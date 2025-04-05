@@ -201,5 +201,4 @@ public sealed class BoardGameList
     {
         BoardGames.Remove(boardGame);
     }
-
 }
