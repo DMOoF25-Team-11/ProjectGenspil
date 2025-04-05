@@ -1,45 +1,56 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.Text.Json.Serialization;
 
 namespace GenSpil.Model
 {
-    public class CustomerList
+    public sealed class CustomerList
     {
-        
-        private List<Customer> _customers;
-
-        public CustomerList()
+        static CustomerList? instance = null; ///> Singleton instance of the CustomerList
+        static readonly object _lock = new object(); ///> Lock object for thread safety
+        public static CustomerList Instance
         {
-            _customers = new List<Customer>();
+            get
+            {
+                lock (_lock)
+                {
+                    if (instance == null)
+                    {
+                        instance = new CustomerList();
+                    }
+                    return instance;
+                }
+            }
+        } ///> Get or set singleton instance of the CustomerList
+
+        public List<Customer> Customers { get; set; } ///> List of customers
+
+        [JsonConstructor]
+        private CustomerList()
+        {
+            Customers = new List<Customer>();
         }
 
         //Adds a customer to the list.
         public void AddCustomer(Customer customer)
         {
-            _customers.Add(customer);
+            Customers.Add(customer);
         }
 
         //Removes a customer to the list.
         public void RemoveCustomer(Customer customer)
         {
-            _customers.Remove(customer);
+            Customers.Remove(customer);
         }
 
         //Findes a customer on the list.
         public Customer? GetCustomerByID(int customerID)
         {
-            return _customers.Find(c => c.CustomerID == customerID);
+            return Customers.Find(c => c.CustomerID == customerID);
         }
 
         //Update function isn't completed.
-        public void UpdateCustomer(int customerID, string newName, string newAddress) 
+        public void UpdateCustomer(int customerID, string newName, string newAddress)
         {
-            var customer = _customers.Find(c => c.CustomerID == customerID);
+            var customer = Customers.Find(c => c.CustomerID == customerID);
 
             if (customer != null)
             {
@@ -59,12 +70,17 @@ namespace GenSpil.Model
 
         public int GenerateID(int customerID)
         {
-            if (_customers.Count == 0)
+            if (Customers.Count == 0)
             {
                 return 1;
             }
 
-            return _customers.Max(c => c.CustomerID) + 1;
+            return Customers.Max(c => c.CustomerID) + 1;
+        }
+
+        public void Clear()
+        {
+            Customers.Clear();
         }
     }
 }
