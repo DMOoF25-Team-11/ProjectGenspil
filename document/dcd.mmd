@@ -121,6 +121,13 @@ class Condition {
 }
 note for Condition "Brætspil tilstand og antal vi har"
 
+class ConditionList {
+    +ICollection~Condition~ Conditions
+    +ConditionList(): void
+    +ToString(): string
+}
+note for ConditionList "Indeholder en liste over tilstande."
+
 class ConditionEnum {
     <<enumeration>>
     Ny // helt ny
@@ -149,8 +156,9 @@ BoardGameList "1" *-- "*" BoardGame : Indeholder
 BoardGame "1" *-- "*" BoardGameVariant : Indeholder
 BoardGameVariant "1" *-- "*" Reserved : Reserveres
 Customer "1" o-- "*" Reserved : Reserverer
-BoardGameVariant "*" *-- "1" Condition : Har
+BoardGameVariant "1" *-- "1" ConditionList : Har
 BoardGame "*" -- "*" Genre : Har
 UserList "1" *-- "*" User : Indeholder
 User "1" -- "1" Role : Har
+ConditionList "1" *-- "5" Condition : Indeholder
 ConditionEnum -- Condition : Har
