@@ -24,7 +24,7 @@ public sealed class UserList
         }
 
     }
-    public List<User> Users { get; private set; } // List of users 
+    public List<User> Users { get; private set; } ///> List of users 
 
     [JsonConstructor]
     UserList()

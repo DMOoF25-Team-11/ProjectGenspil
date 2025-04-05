@@ -112,6 +112,9 @@ internal class Program
         Console.ReadKey();
         return boardGame;
     }
+    /// <summary>
+    /// Displays the details of a board game and its variants.
+    /// </summary>
     static void ShowBoardGameBody(BoardGame boardGame)
     {
         int indent = 0;
@@ -706,6 +709,11 @@ internal class Program
     }
     #endregion menu
 
+    /// <summary>
+    /// Main method of the program.
+    /// Loads data from a JSON file, displays the main menu, and exports data back to the JSON file.
+    /// </summary>
+    /// <param name="args"></param>
     static void Main(string[] args)
     {
         JsonFileHandler.Instance.ImportData(DATA_JSON_FILE);
