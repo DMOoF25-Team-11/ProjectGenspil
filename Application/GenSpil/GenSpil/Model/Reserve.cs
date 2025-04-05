@@ -1,4 +1,3 @@
-﻿
 namespace GenSpil.Model;
 
 public class Reserve
@@ -7,9 +6,9 @@ public class Reserve
     /// <summary>
     /// Egenskaber for Reserve class 
     /// </summary>
-    DateTime _reservedDate { get; set; }
-    int _quantity { get; set; }
-    int _customerID { get; set; }
+    DateTime ReservedDate { get; set; }
+    int Quantity { get; set; }
+    int CustomerID { get; set; }
 
     /// <summary>
     /// Constructor for Reserve class
@@ -19,10 +18,8 @@ public class Reserve
     /// <param name="customerID"></param>
     public Reserve(DateTime reservedDate, int quantity, int customerID, int boardGameID)
     {
-        _reservedDate = reservedDate;
-        _quantity = quantity;
-        _customerID = customerID;
-        
+        ReservedDate = reservedDate;
+        Quantity = quantity;
+        CustomerID = customerID;
     }
-
 }
