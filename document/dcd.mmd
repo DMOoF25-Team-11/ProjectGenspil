@@ -19,7 +19,7 @@ class User {
     +SetPassword(Password: string): void
 }
 note for User "Bruges til at logge ind og administrere brugere.
-Krav da vi har oplysinger på kunder (GPDR)."
+Krav da vi har oplysinger pÃ¥ kunder (GPDR)."
 
 class Role {
     <<enumeration>>
@@ -41,7 +41,7 @@ class Customer {
     +SetAddress(Address: string): void
     +ToString(): string
 }
-note for Customer "Administrerer personlige oplysninger og spilkøb/reservationer."
+note for Customer "Administrerer personlige oplysninger og spilkÃ¸b/reservationer."
 
 class CustomerList {
     -list<Customer> _customers
@@ -63,13 +63,11 @@ class BoardGameList {
     +Update(BoardGame: BoardGame): void
     +GetBoardGamesByGenre(genre: Genre): list<BoardGame>
     +GetBoardGamesByTitle(title: string): list<BoardGame>
-    +GetReserved(): Reserved
-    +SetReserved(Reserved: Reserved): void
     +GenerateID(): int
     +Seek(title: string, condition: Condition, price: decimal, genre: Genre, numberPlayers: int): list<BoardGameVariant>
 }
 note for BoardGameList "Indeholder en liste
-over brætspil."
+over brÃ¦tspil."
 
 class BoardGame {
     -int _boardGameID
@@ -85,26 +83,28 @@ class BoardGame {
     BoardGame(BoardGameID: int, Title: string, Variant: string, Genre: Genre, Condition: Condition)
     +ToString(): string
 }
-note for BoardGame "Repræsenterer et brugt brætspil
+note for BoardGame "ReprÃ¦senterer et brugt brÃ¦tspil
 med tilstand og lager."
 
 class BoardGameVariant {
     -list<Condition> _condition
     string Variant
+    string numberOfPlayer // antal spillere
     +BoardGameVariant(BoardGame: BoardGame, Variant: string, Condition: Condition): void
     +Condition(): Condition
     +Condition(Condition: Condition): void
+    +GetReserved(): Reserved
+    +SetReserved(Reserved: Reserved): void
 }
-note for BoardGameVariant "Brætspil varianter"
+note for BoardGameVariant "BrÃ¦tspil varianter"
 
 class Reserved {
     -DateTime _reservedDate
     -int _quantity
     -int _customerID
-    -int _boardGameID
     +Reserved(ReservedDate: DateTime, Quantity: int, CustomerID: int, BoardGameID: int): void
 }
-note for Reserved "Hvornår et brætspil er 
+note for Reserved "HvornÃ¥r et brÃ¦tspil er 
 reserveret. Og til hvem"
 
 class Condition {
@@ -119,37 +119,46 @@ class Condition {
     +SetPrice(Price: decimal): void
     +Condition(Condition: ConditionEnum, Quantity: int, Price: decimal): void
 }
-note for Condition "Brætspil tilstand og antal vi har"
+note for Condition "BrÃ¦tspil tilstand og antal vi har"
+
+class ConditionList {
+    +ICollection~Condition~ Conditions
+    +ConditionList(): void
+    +ToString(): string
+}
+note for ConditionList "Indeholder en liste over tilstande."
 
 class ConditionEnum {
     <<enumeration>>
-    Sealed // helt ny
-    Good // god stand
-    Ok // lettere ridset
-    Fair // lidt skrammet
+    Ny // helt ny
+    God // god stand
+    Brugt // lettere ridset
+    Slidt // lidt skrammet
     Reparation // reparation
 }
-note for ConditionEnum "Brætspil tilstand"
+note for ConditionEnum "BrÃ¦tspil tilstand"
 
 
 class Genre {
     <<enumeration>>
-    Strategy // strategi
-    Party // fest
-    Family // familie
-    Abstract // abstrakt
-    Thematic // tematisk
-    Children // børn
+    Quiz
+    Strategi
+    Familie
+    Selskab
+    Rollespil
+    BÃ¸rnespil
 }
-note for Genre "Brætspil genre"
+note for Genre "BrÃ¦tspil genre"
 
 CustomerList "1" *-- "*" Customer : Indeholder
-Customer "*" -- "*" BoardGameList : Køber / reservere
+Customer "*" -- "*" BoardGameList : KÃ¸ber / reservere
 BoardGameList "1" *-- "*" BoardGame : Indeholder
-BoardGameList "1" *-- "*" Reserved : Reserveres
 BoardGame "1" *-- "*" BoardGameVariant : Indeholder
-BoardGameVariant "*" -- "1" Condition : Har
+BoardGameVariant "1" *-- "*" Reserved : Reserveres
+Customer "1" o-- "*" Reserved : Reserverer
+BoardGameVariant "1" *-- "1" ConditionList : Har
 BoardGame "*" -- "*" Genre : Har
 UserList "1" *-- "*" User : Indeholder
 User "1" -- "1" Role : Har
+ConditionList "1" *-- "5" Condition : Indeholder
 ConditionEnum -- Condition : Har
