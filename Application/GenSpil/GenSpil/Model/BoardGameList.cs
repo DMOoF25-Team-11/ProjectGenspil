@@ -124,49 +124,6 @@ public sealed class BoardGameList
         return filteredGames;
     }
 
-    //public ICollection<BoardGame> FindByVariant(string? variant, ICollection<BoardGame> games)
-    //{
-    //    List<BoardGameVariant> removeVariant = new List<BoardGameVariant>();
-    //    List<BoardGame> removeBoardGame = new List<BoardGame>();
-    //    if (variant != null && variant != "")
-    //    {
-    //        for (int i = 0; i < games.Count(); i++)
-    //        {
-    //            for (int j = 0; j < games.ElementAt(i).Variants.Count; ++j)
-    //                if (!games.ElementAt(i).Variants[j].Title.Contains(variant))
-    //                    removeVariant.Add(games.ElementAt(i).Variants[j]);
-    //            foreach (BoardGameVariant item in removeVariant)
-    //                games.ElementAt(i).Variants.Remove(item);
-    //            if (games.ElementAt(i).Variants.Count() == 0)
-    //                removeBoardGame.Add(games.ElementAt(i));
-    //        }
-    //        foreach (var item in removeBoardGame)
-    //            games.Remove(item);
-    //    }
-    //    return games;
-    //}
-
-    //public ICollection<BoardGame> FindByCondition(List<Type.Condition>? condition, ICollection<BoardGame> games)
-    //{
-    //    List<Condition> removeCondition = new List<Condition>();
-    //    List<BoardGame> removeBoardGame = new List<BoardGame>();
-    //    if (condition != null)
-    //    {
-    //        for (int i = 0; i < games.Count(); i++)
-    //        {
-    //            for (int j = 0; j < games.ElementAt(i).Variants.Count; ++j)
-    //            {
-    //                for (int k = 0; k < games.ElementAt(i).Variants[j].ConditionList.Conditions.Count(); ++k)
-    //                    if (!condition.Contains(games.ElementAt(i).Variants[j].ConditionList.Conditions.ElementAt(k).ConditionEnum))
-    //                        removeCondition.Add(games.ElementAt(i).Variants[j].ConditionList.Conditions.ElementAt(k));
-    //                foreach (var item in removeCondition)
-    //                    games.ElementAt(i).Variants[j].ConditionList.Conditions.Remove(item);
-    //            }
-    //        }
-    //    }
-    //    return games;
-    //}
-
     public ICollection<BoardGame> FilterByCondition(List<Type.Condition>? condition, ICollection<BoardGame> games)
     {
         if (condition == null || condition.Count == 0)
@@ -244,6 +201,4 @@ public sealed class BoardGameList
     {
         BoardGames.Remove(boardGame);
     }
-
-
 }

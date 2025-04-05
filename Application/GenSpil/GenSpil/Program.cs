@@ -105,8 +105,19 @@ internal class Program
     /// <returns>The displayed board game.</returns>
     static BoardGame ShowBoardGame(BoardGame boardGame)
     {
-        int indent = 0;
         HeadLine(boardGame.Title);
+        Console.WriteLine(boardGame.ToString());
+        ShowBoardGameBody(boardGame);
+        Console.WriteLine("\nTryk på en tast for at fortsætte...");
+        Console.ReadKey();
+        return boardGame;
+    }
+    /// <summary>
+    /// Displays the details of a board game and its variants.
+    /// </summary>
+    static void ShowBoardGameBody(BoardGame boardGame)
+    {
+        int indent = 0;
         Console.WriteLine(boardGame.ToString());
         foreach (BoardGameVariant boardGameVariant in boardGame.Variants)
         {
@@ -121,9 +132,6 @@ internal class Program
             }
             indent -= 2;
         }
-        Console.WriteLine("\nTryk på en tast for at fortsætte...");
-        Console.ReadKey();
-        return boardGame;
     }
     /// <summary>
     /// Displays the details of a list of board games.
@@ -283,7 +291,7 @@ internal class Program
     /// <param name="boardGame">The board game to remove.</param>
     static void RemoveBoardGame(BoardGame boardGame)
     {
-        throw new NotImplementedException();
+        _boardGameList.Remove(boardGame);
     }
     /// <summary>
     /// Prompts the user to search for board games based on various criteria.
@@ -357,9 +365,17 @@ internal class Program
     /// <summary>
     /// Displays a report of board games sorted by title.
     /// </summary>
-    static void ShowReportBoardGameSort()
+    static void ShowReportGameList(List<BoardGame> boardGames)
     {
-        throw new NotImplementedException();
+        HeadLine("List af brætspil");
+        foreach (BoardGame boardGame in boardGames)
+        {
+            SubHeadLine(boardGame.Title);
+            Console.WriteLine(boardGame.ToString());
+            ShowBoardGameBody(boardGame);
+        }
+        Console.WriteLine("\nTryk på en tast for at fortsætte...");
+        Console.ReadKey();
     }
     /// <summary>
     /// Displays a report of board games sorted by genre.
@@ -403,6 +419,11 @@ internal class Program
         Console.WriteLine(CenterString(headLine, l));
         Console.WriteLine(new string('-', l + 1));
         Console.WriteLine();
+    }
+    static void SubHeadLine(string headLine)
+    {
+        Console.WriteLine(CenterString(headLine, 80));
+        Console.WriteLine(new string('-', 80));
     }
     /// <summary>
     /// Centers the given text within a specified width.
@@ -688,6 +709,11 @@ internal class Program
     }
     #endregion menu
 
+    /// <summary>
+    /// Main method of the program.
+    /// Loads data from a JSON file, displays the main menu, and exports data back to the JSON file.
+    /// </summary>
+    /// <param name="args"></param>
     static void Main(string[] args)
     {
         JsonFileHandler.Instance.ImportData(DATA_JSON_FILE);

@@ -21,6 +21,26 @@ namespace GenSpil.Model
             Price = price;
         }
 
+        /// <summary>
+        /// Sets the price of the condition.
+        /// </summary>
+        /// <param name="price"></param>
+        public void SetPrice(decimal price)
+        {
+            Price = price;
+        }
+
+        /// <summary>
+        /// Sets the quantity of the condition.
+        /// </summary>
+        /// <param name="quantity"></param>
+        public void SetQuantity(int quantity)
+        {
+            Quantity = quantity;
+        }
+
+
+
         public override string ToString()
         {
             string result;

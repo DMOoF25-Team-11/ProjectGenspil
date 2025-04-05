@@ -15,24 +15,6 @@ namespace GenSpil.Model
             }
         }
 
-        public void SetPrice(Type.Condition condition, decimal price)
-        {
-            var conditionItem = Conditions.FirstOrDefault(c => c.ConditionEnum == condition);
-            if (conditionItem != null)
-            {
-                conditionItem.Price = price;
-            }
-        }
-
-        public void SetQuantity(Type.Condition condition, int quantity)
-        {
-            var conditionItem = Conditions.FirstOrDefault(c => c.ConditionEnum == condition);
-            if (conditionItem != null)
-            {
-                conditionItem.Quantity = quantity;
-            }
-        }
-
         public override string ToString()
         {
             if (Conditions.Count == 0)
