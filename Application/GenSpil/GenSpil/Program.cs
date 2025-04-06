@@ -106,7 +106,6 @@ internal class Program
     static BoardGame ShowBoardGame(BoardGame boardGame)
     {
         HeadLine(boardGame.Title);
-        Console.WriteLine(boardGame.ToString());
         ShowBoardGameBody(boardGame);
         Console.WriteLine("\nTryk på en tast for at fortsætte...");
         Console.ReadKey();
