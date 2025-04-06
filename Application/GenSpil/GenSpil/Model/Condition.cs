@@ -44,15 +44,16 @@ namespace GenSpil.Model
         public override string ToString()
         {
             string result;
+            result = $"{ConditionEnum}";
             if (Quantity == 0)
             {
-                result = $"{AnsiCode.BRIGHT_BLACK}{ConditionEnum} - Ingen på lager";
+                result += $"\n    {AnsiCode.BRIGHT_BLACK}Ingen på lager";
             }
             else
             {
-                result = $"{ConditionEnum} - Antal: {Quantity}";
+                result = $"\n    Antal: {Quantity}";
             }
-            result += $", Pris: {Price} kr{AnsiCode.ANSI_RESET}";
+            result += $"\n    Pris: {Price} kr{AnsiCode.ANSI_RESET}";
             return result;
         }
     }
