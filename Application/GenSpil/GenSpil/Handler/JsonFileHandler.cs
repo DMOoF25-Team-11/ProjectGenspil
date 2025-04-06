@@ -31,7 +31,9 @@ public class JsonFileHandler
 
     private readonly Version _version = new Version(1, 0); ///> The _version of the JSON file.
     private readonly DataContainer _dataContainer = new DataContainer(); ///> The data container for the JSON file.
+    private JsonSerializerOptions _jsonSerializerOptions;
 
+    ///> The options for the JSON serializer.
     /// <summary>
     /// Represents the data container for the JSON file.
     /// </summary>
@@ -57,6 +59,13 @@ public class JsonFileHandler
         {
             Version = _version,
         };
+
+        _jsonSerializerOptions = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase, ///> Use camel case for property names
+            Converters = { new JsonStringEnumConverter() }
+        };
     } ///> Private constructor for singleton pattern
 
 
@@ -70,12 +79,7 @@ public class JsonFileHandler
         {
             if (!File.Exists(filePath))
                 File.Create(filePath);
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                Converters = { new JsonStringEnumConverter() }
-            };
-            string jsonString = JsonSerializer.Serialize(_dataContainer, options);
+            string jsonString = JsonSerializer.Serialize(_dataContainer, _jsonSerializerOptions);
             File.WriteAllText(filePath, jsonString);
         }
     }
@@ -84,24 +88,22 @@ public class JsonFileHandler
     /// Imports data from a JSON file.
     /// Reassign owner object for Car objects. So owner object is the same in OwnerList and CarList.
     /// </summary>
-    /// <param name="filename">Optional. Default value from Constants.jsonFilePath</param>
-    public void ImportData(string filename)
+    /// <param name="filePath">Optional. Default value from Constants.jsonFilePath</param>
+    public void ImportData(string filePath)
     {
         lock (_lock)
         {
             try
             {
-                if (File.Exists(filename))
+                CheckAndCreateEmptyJsonFile(filePath);
+
+                if (File.Exists(filePath))
                 {
                     BoardGameList.Instance.Clear();
                     UserList.Instance.Users.Clear();
                     CustomerList.Instance.Clear();
-                    string jsonString = File.ReadAllText(filename);
-                    var options = new JsonSerializerOptions
-                    {
-                        Converters = { new JsonStringEnumConverter() }
-                    };
-                    var data = JsonSerializer.Deserialize<DataContainer>(jsonString, options);
+                    string jsonString = File.ReadAllText(filePath);
+                    var data = JsonSerializer.Deserialize<DataContainer>(jsonString, _jsonSerializerOptions);
 
                     if (data == null)
                     {
@@ -118,6 +120,10 @@ public class JsonFileHandler
                         {
                             UserList.Instance.Add(data.Users.Users[i]);
                         }
+                        for (int i = 0; i < data.Customers?.Customers.Count; i++)
+                        {
+                            CustomerList.Instance.AddCustomer(data.Customers.Customers[i]);
+                        }
                     }
                     else
                     {
@@ -133,5 +139,29 @@ public class JsonFileHandler
             }
         }
     }
+    public void CheckAndCreateEmptyJsonFile(string filePath)
+    {
+        lock (_lock)
+        {
+            if (!File.Exists(filePath) || new FileInfo(filePath).Length == 0)
+            {
+                //var emptyDataContainer = new DataContainer
+                //{
+                //    Version = _version,
+                //    BoardGames = new BoardGameList(),
+                //    Users = new UserList(),
+                //    Customers = new CustomerList()
+                //};
 
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    Converters = { new JsonStringEnumConverter() }
+                };
+
+                string jsonString = JsonSerializer.Serialize(_dataContainer, options);
+                File.WriteAllText(filePath, jsonString);
+            }
+        }
+    }
 }
