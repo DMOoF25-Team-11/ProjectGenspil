@@ -99,105 +99,118 @@ internal class Program
         Login();
     }
     /// <summary>
-    /// Displays the details of a board game with press a key to continue.
+    /// Removes a board game.
     /// </summary>
-    /// <param name="boardGame"> The board game to display.</param>
-    /// <returns>The board game.</returns>
-    static BoardGame ShowBoardGamePerPage(BoardGame boardGame)
+    /// <param name="boardGame">The board game to remove.</param>
+    static void RemoveBoardGame(BoardGame boardGame)
     {
-        HeadLine(boardGame.Title);
-        ShowBoardGameBody(boardGame);
-        Console.WriteLine("\nTryk på en tast for at fortsætte...");
-        Console.ReadKey();
-        return boardGame;
+        _boardGameList.Remove(boardGame);
     }
     /// <summary>
-    /// Displays the details of a board game.
+    /// Centers the given text within a specified width.
     /// </summary>
-    /// <param name="boardGame">The board game to display.</param>
-    /// <returns>The displayed board game.</returns>
-    static BoardGame ShowBoardGame(BoardGame boardGame)
+    /// <param name="text">The text to center.</param>
+    /// <param name="width">The width within which to center the text.</param>
+    /// <returns>The centered text with padding.</returns>
+    static void HeadLine(string headLine)
     {
-        SubHeadLine(boardGame.Title);
-        ShowBoardGameBody(boardGame);
-        return boardGame;
+        Console.Clear();
+        string title = $" {TITLE} version {GetVersion()} ";
+
+        int l = Math.Max(title.Length, title.Length) + 1;
+        Frame frame = new Frame(l, 2);
+        frame.SetFrameText(title);
+        frame.Render();
+        Console.WriteLine();
+        Console.WriteLine(CenterString(headLine, l));
+        Console.WriteLine(new string('-', l + 1));
+        Console.WriteLine();
     }
     /// <summary>
-    /// Displays the details of a list of board games.
+    /// Displays a sub-headline with the given text.
     /// </summary>
-    /// <param name="boardGames">The list of board games to display.</param>
-    static void ShowBoardGame(IEnumerable<BoardGame> boardGames, bool OnePerPage = false)
+    /// <param name="headLine"></param>
+    static void SubHeadLine(string headLine)
     {
-        if (OnePerPage)
+        Console.WriteLine();
+        Console.WriteLine(new string('-', 80));
+        Console.WriteLine(CenterString(headLine, 80));
+        Console.WriteLine(new string('-', 80));
+    }
+    /// <summary>
+    /// Centers the given text within a specified width.
+    /// </summary>
+    /// <param name="text">The text to center.</param>
+    /// <param name="width">The width within which to center the text.</param>
+    /// <returns>The centered text with padding.</returns>
+    static string CenterString(string text, int width)
+    {
+        if (width <= text.Length)
         {
-            foreach (BoardGame boardGame in boardGames)
+            return text; // Or throw an exception, or truncate the string
+        }
+        int padding = width - text.Length;
+        int leftPadding = padding / 2;
+        int rightPadding = padding - leftPadding;
+        return new string(' ', leftPadding) + text + new string(' ', rightPadding);
+    }
+    /// <summary>
+    /// Reads a line of input from the console, with optional hiding of input characters.
+    /// </summary>
+    /// <param name="hideInput">Whether to hide the input characters (e.g., for passwords).</param>
+    /// <returns>The input string, or null if the escape key was pressed.</returns>
+    static string? ReadLineWithEscape(bool hideInput = false)
+    {
+        StringBuilder input = new StringBuilder();
+        ConsoleKeyInfo keyInfo;
+        while ((keyInfo = Console.ReadKey(true)).Key != ConsoleKey.Enter)
+        {
+            if (keyInfo.Key == ConsoleKey.Escape)
             {
-                ShowBoardGamePerPage(boardGame);
+                return null; // Return null if Esc is pressed
             }
-            return;
-        }
-        foreach (BoardGame boardGame in boardGames)
-        {
-            ShowBoardGame(boardGame);
-        }
-        Console.WriteLine("\nTryk på en tast for at fortsætte...");
-        Console.ReadKey();
-    }
-    /// <summary>
-    /// Displays the details of a board game and its variants.
-    /// </summary>
-    static void ShowBoardGameBody(BoardGame boardGame)
-    {
-        int indent = 0;
-        Console.WriteLine(boardGame.ToString());
-        foreach (BoardGameVariant boardGameVariant in boardGame.Variants)
-        {
-            string prefix = "";
-            if (boardGameVariant.Title == "")
-                prefix = "";
-            else
-                prefix = " : ";
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine(boardGame.Title + prefix + boardGameVariant.ToString());
-            Console.ResetColor();
-            indent += 2;
-            foreach (var conditions in boardGameVariant.ConditionList.Conditions)
+            if (keyInfo.Key == ConsoleKey.Tab)
             {
-                string indentString = new string(' ', indent);
-                Console.WriteLine(indentString + "Condition : " + conditions.ToString());
+                continue; // Ignore Tab key
             }
-            indent -= 2;
+            if (keyInfo.Key == ConsoleKey.Backspace && input.Length > 0)
+            {
+                input.Remove(input.Length - 1, 1);
+                Console.Write("\b \b");
+            }
+            else if (keyInfo.Key != ConsoleKey.Backspace)
+            {
+                input.Append(keyInfo.KeyChar);
+                if (hideInput)
+                {
+                    Console.Write('*');
+                }
+                else
+                {
+                    Console.Write(keyInfo.KeyChar);
+                }
+            }
         }
-    }
-    static BoardGameVariant ShowBoardGameVariantPerPage(BoardGame boardGame, BoardGameVariant boardGameVariant)
-    {
-        HeadLine(boardGame.Title);
-        Console.WriteLine(boardGame.ToString());
-        Console.WriteLine("Variant : " + boardGameVariant.ToString());
-        foreach (var conditions in boardGameVariant.ConditionList.Conditions)
-        {
-            Console.WriteLine("Condition : " + conditions.ToString());
-        }
-        Console.WriteLine("\nTryk på en tast for at fortsætte...");
-        Console.ReadKey();
-        return boardGameVariant;
+        Console.WriteLine();
+        return input.ToString();
     }
     /// <summary>
-    /// Displays the details of a specific board game variant.
+    /// Displays an error message in red text.
     /// </summary>
-    /// <param name="boardGame">The board game to display.</param>
-    /// <param name="boardGameVariant">The variant of the board game to display.</param>
-    static BoardGameVariant ShowBoardGameVariant(BoardGame boardGame, BoardGameVariant boardGameVariant)
+    /// <param name="message">The error message to display.</param>
+    static void ErrorMessage(string message)
     {
-        SubHeadLine(boardGame.Title);
-        Console.WriteLine(boardGame.ToString());
-        Console.WriteLine("Variant : " + boardGameVariant.ToString());
-        foreach (var conditions in boardGameVariant.ConditionList.Conditions)
-        {
-            Console.WriteLine("Condition : " + conditions.ToString());
-        }
-        return boardGameVariant;
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine();
+        Console.WriteLine(message);
+        Console.ResetColor();
+        Console.WriteLine("Tryk på en tast for at fortsætte...");
+        Console.ReadKey();
     }
+
+    #region ui
+
+    #region forms
     /// <summary>
     /// Prompts the user to add a new board game.
     /// </summary>
@@ -372,14 +385,6 @@ internal class Program
         Console.CursorVisible = false;
     }
     /// <summary>
-    /// Removes a board game.
-    /// </summary>
-    /// <param name="boardGame">The board game to remove.</param>
-    static void RemoveBoardGame(BoardGame boardGame)
-    {
-        _boardGameList.Remove(boardGame);
-    }
-    /// <summary>
     /// Prompts the user to search for board games based on various criteria.
     /// </summary>
     /// <returns>A list of board games that match the search criteria.</returns>
@@ -448,6 +453,109 @@ internal class Program
 
         ShowBoardGame(filteredBoardGames);
     }
+    #endregion forms
+
+    #region output
+    /// <summary>
+    /// Displays the details of a board game with press a key to continue.
+    /// </summary>
+    /// <param name="boardGame"> The board game to display.</param>
+    /// <returns>The board game.</returns>
+    static BoardGame ShowBoardGamePerPage(BoardGame boardGame)
+    {
+        HeadLine(boardGame.Title);
+        ShowBoardGameBody(boardGame);
+        Console.WriteLine("\nTryk på en tast for at fortsætte...");
+        Console.ReadKey();
+        return boardGame;
+    }
+    /// <summary>
+    /// Displays the details of a board game.
+    /// </summary>
+    /// <param name="boardGame">The board game to display.</param>
+    /// <returns>The displayed board game.</returns>
+    static BoardGame ShowBoardGame(BoardGame boardGame)
+    {
+        SubHeadLine(boardGame.Title);
+        ShowBoardGameBody(boardGame);
+        return boardGame;
+    }
+    /// <summary>
+    /// Displays the details of a list of board games.
+    /// </summary>
+    /// <param name="boardGames">The list of board games to display.</param>
+    static void ShowBoardGame(IEnumerable<BoardGame> boardGames, bool OnePerPage = false)
+    {
+        if (OnePerPage)
+        {
+            foreach (BoardGame boardGame in boardGames)
+            {
+                ShowBoardGamePerPage(boardGame);
+            }
+            return;
+        }
+        foreach (BoardGame boardGame in boardGames)
+        {
+            ShowBoardGame(boardGame);
+        }
+        Console.WriteLine("\nTryk på en tast for at fortsætte...");
+        Console.ReadKey();
+    }
+    /// <summary>
+    /// Displays the details of a board game and its variants.
+    /// </summary>
+    static void ShowBoardGameBody(BoardGame boardGame)
+    {
+        int indent = 0;
+        Console.WriteLine(boardGame.ToString());
+        foreach (BoardGameVariant boardGameVariant in boardGame.Variants)
+        {
+            string prefix = "";
+            if (boardGameVariant.Title == "")
+                prefix = "";
+            else
+                prefix = " : ";
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(boardGame.Title + prefix + boardGameVariant.ToString());
+            Console.ResetColor();
+            indent += 2;
+            foreach (var conditions in boardGameVariant.ConditionList.Conditions)
+            {
+                string indentString = new string(' ', indent);
+                Console.WriteLine(indentString + "Condition : " + conditions.ToString());
+            }
+            indent -= 2;
+        }
+    }
+    static BoardGameVariant ShowBoardGameVariantPerPage(BoardGame boardGame, BoardGameVariant boardGameVariant)
+    {
+        HeadLine(boardGame.Title);
+        Console.WriteLine(boardGame.ToString());
+        Console.WriteLine("Variant : " + boardGameVariant.ToString());
+        foreach (var conditions in boardGameVariant.ConditionList.Conditions)
+        {
+            Console.WriteLine("Condition : " + conditions.ToString());
+        }
+        Console.WriteLine("\nTryk på en tast for at fortsætte...");
+        Console.ReadKey();
+        return boardGameVariant;
+    }
+    /// <summary>
+    /// Displays the details of a specific board game variant.
+    /// </summary>
+    /// <param name="boardGame">The board game to display.</param>
+    /// <param name="boardGameVariant">The variant of the board game to display.</param>
+    static BoardGameVariant ShowBoardGameVariant(BoardGame boardGame, BoardGameVariant boardGameVariant)
+    {
+        SubHeadLine(boardGame.Title);
+        Console.WriteLine(boardGame.ToString());
+        Console.WriteLine("Variant : " + boardGameVariant.ToString());
+        foreach (var conditions in boardGameVariant.ConditionList.Conditions)
+        {
+            Console.WriteLine("Condition : " + conditions.ToString());
+        }
+        return boardGameVariant;
+    }
     /// <summary>
     /// Displays a report of board games sorted by title.
     /// </summary>
@@ -490,179 +598,8 @@ internal class Program
         Console.WriteLine("\nTryk på en tast for at fortsætte...");
         Console.ReadKey();
     }
-    /// <summary>
-    /// Centers the given text within a specified width.
-    /// </summary>
-    /// <param name="text">The text to center.</param>
-    /// <param name="width">The width within which to center the text.</param>
-    /// <returns>The centered text with padding.</returns>
-    static void HeadLine(string headLine)
-    {
-        Console.Clear();
-        string title = $" {TITLE} version {GetVersion()} ";
 
-        int l = Math.Max(title.Length, title.Length) + 1;
-        Frame frame = new Frame(l, 2);
-        frame.SetFrameText(title);
-        frame.Render();
-        Console.WriteLine();
-        Console.WriteLine(CenterString(headLine, l));
-        Console.WriteLine(new string('-', l + 1));
-        Console.WriteLine();
-    }
-    /// <summary>
-    /// Displays a sub-headline with the given text.
-    /// </summary>
-    /// <param name="headLine"></param>
-    static void SubHeadLine(string headLine)
-    {
-        Console.WriteLine();
-        Console.WriteLine(new string('-', 80));
-        Console.WriteLine(CenterString(headLine, 80));
-        Console.WriteLine(new string('-', 80));
-    }
-    /// <summary>
-    /// Centers the given text within a specified width.
-    /// </summary>
-    /// <param name="text">The text to center.</param>
-    /// <param name="width">The width within which to center the text.</param>
-    /// <returns>The centered text with padding.</returns>
-    static string CenterString(string text, int width)
-    {
-        if (width <= text.Length)
-        {
-            return text; // Or throw an exception, or truncate the string
-        }
-        int padding = width - text.Length;
-        int leftPadding = padding / 2;
-        int rightPadding = padding - leftPadding;
-        return new string(' ', leftPadding) + text + new string(' ', rightPadding);
-    }
-    /// <summary>
-    /// Reads a line of input from the console, with optional hiding of input characters.
-    /// </summary>
-    /// <param name="hideInput">Whether to hide the input characters (e.g., for passwords).</param>
-    /// <returns>The input string, or null if the escape key was pressed.</returns>
-    static string? ReadLineWithEscape(bool hideInput = false)
-    {
-        StringBuilder input = new StringBuilder();
-        ConsoleKeyInfo keyInfo;
-        while ((keyInfo = Console.ReadKey(true)).Key != ConsoleKey.Enter)
-        {
-            if (keyInfo.Key == ConsoleKey.Escape)
-            {
-                return null; // Return null if Esc is pressed
-            }
-            if (keyInfo.Key == ConsoleKey.Tab)
-            {
-                continue; // Ignore Tab key
-            }
-            if (keyInfo.Key == ConsoleKey.Backspace && input.Length > 0)
-            {
-                input.Remove(input.Length - 1, 1);
-                Console.Write("\b \b");
-            }
-            else if (keyInfo.Key != ConsoleKey.Backspace)
-            {
-                input.Append(keyInfo.KeyChar);
-                if (hideInput)
-                {
-                    Console.Write('*');
-                }
-                else
-                {
-                    Console.Write(keyInfo.KeyChar);
-                }
-            }
-        }
-        Console.WriteLine();
-        return input.ToString();
-    }
-    /// <summary>
-    /// Parses a string of conditions into a list of Condition enums.
-    /// </summary>
-    /// <param name="condition">The string of conditions to parse.</param>
-    /// <returns>A list of Condition enums, or null if parsing failed.</returns>
-    static List<Type.Condition>? ParseCondition(string? condition)
-    {
-        List<Type.Condition> list = new List<Type.Condition>();
-        if (condition == null)
-        {
-            return null;
-        }
-        string[] conditionArray = condition.Split(" ");
-
-        foreach (string conditionString in conditionArray)
-        {
-            // Try to parse as integer
-            if (int.TryParse(conditionString, out int conditionInt))
-            {
-                if (Enum.IsDefined(typeof(Type.Condition), conditionInt))
-                {
-                    list.Add((Type.Condition)conditionInt);
-                }
-            }
-            else if (Enum.TryParse(conditionString, true, out Type.Condition conditionEnum))
-            {
-                list.Add(conditionEnum);
-            }
-        }
-        if (list.Count > 0)
-            return list;
-        return null;
-    }
-    /// <summary>
-    /// Parses a string of genres into a list of Genre enums.
-    /// </summary>
-    /// <param name="gerne">The string of genres to parse.</param>
-    /// <returns>A list of Genre enums, or null if parsing failed.</returns>
-    static List<Type.Genre>? ParseGenre(string? gerne)
-    {
-        List<Type.Genre> list = new List<Type.Genre>();
-        if (gerne == null)
-        {
-            return null;
-        }
-
-        string[] genreArray = gerne.Split(" ");
-
-        foreach (string item in genreArray)
-        {
-            // Try to parse as integer
-            if (int.TryParse(item, out int gerneInt))
-            {
-                if (Enum.IsDefined(typeof(Type.Genre), gerneInt))
-                {
-                    list.Add((Type.Genre)gerneInt);
-                }
-            }
-            else
-            {
-                // Try to parse as string
-                if (Enum.TryParse(item, true, out Type.Genre genreEnum))
-                {
-                    list.Add(genreEnum);
-                }
-            }
-        }
-
-        if (list.Count > 0)
-            return list;
-        return null;
-    }
-    /// <summary>
-    /// Displays an error message in red text.
-    /// </summary>
-    /// <param name="message">The error message to display.</param>
-    static void ErrorMessage(string message)
-    {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine();
-        Console.WriteLine(message);
-        Console.ResetColor();
-        Console.WriteLine("Tryk på en tast for at fortsætte...");
-        Console.ReadKey();
-    }
+    #endregion output
 
     #region menu
     /// <summary>
@@ -810,6 +747,83 @@ internal class Program
         }
     }
     #endregion menu
+
+    #endregion ui
+
+    #region Parse
+    /// <summary>
+    /// Parses a string of conditions into a list of Condition enums.
+    /// </summary>
+    /// <param name="condition">The string of conditions to parse.</param>
+    /// <returns>A list of Condition enums, or null if parsing failed.</returns>
+    static List<Type.Condition>? ParseCondition(string? condition)
+    {
+        List<Type.Condition> list = new List<Type.Condition>();
+        if (condition == null)
+        {
+            return null;
+        }
+        string[] conditionArray = condition.Split(" ");
+
+        foreach (string conditionString in conditionArray)
+        {
+            // Try to parse as integer
+            if (int.TryParse(conditionString, out int conditionInt))
+            {
+                if (Enum.IsDefined(typeof(Type.Condition), conditionInt))
+                {
+                    list.Add((Type.Condition)conditionInt);
+                }
+            }
+            else if (Enum.TryParse(conditionString, true, out Type.Condition conditionEnum))
+            {
+                list.Add(conditionEnum);
+            }
+        }
+        if (list.Count > 0)
+            return list;
+        return null;
+    }
+    /// <summary>
+    /// Parses a string of genres into a list of Genre enums.
+    /// </summary>
+    /// <param name="gerne">The string of genres to parse.</param>
+    /// <returns>A list of Genre enums, or null if parsing failed.</returns>
+    static List<Type.Genre>? ParseGenre(string? gerne)
+    {
+        List<Type.Genre> list = new List<Type.Genre>();
+        if (gerne == null)
+        {
+            return null;
+        }
+
+        string[] genreArray = gerne.Split(" ");
+
+        foreach (string item in genreArray)
+        {
+            // Try to parse as integer
+            if (int.TryParse(item, out int gerneInt))
+            {
+                if (Enum.IsDefined(typeof(Type.Genre), gerneInt))
+                {
+                    list.Add((Type.Genre)gerneInt);
+                }
+            }
+            else
+            {
+                // Try to parse as string
+                if (Enum.TryParse(item, true, out Type.Genre genreEnum))
+                {
+                    list.Add(genreEnum);
+                }
+            }
+        }
+
+        if (list.Count > 0)
+            return list;
+        return null;
+    }
+    #endregion
 
     /// <summary>
     /// Main method of the program.
