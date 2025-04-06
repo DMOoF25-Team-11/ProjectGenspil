@@ -1,22 +1,24 @@
-﻿using TirsvadCLI.AnsiCode;
+﻿using System.Text.Json.Serialization;
+using TirsvadCLI.AnsiCode;
 
 namespace GenSpil.Model
 {
     public class Condition
     {
-        public Type.Condition ConditionEnum { get; set; }
-        public int Quantity { get; set; }
-        public decimal Price { get; set; }
+        public Type.Condition ConditionEnum { get; private set; }
+        public int Quantity { get; private set; }
+        public decimal Price { get; private set; }
 
         /// <summary>
         /// Constructor til Condition
         /// </summary>
-        /// <param name="condition"></param>
+        /// <param name="conditionEnum"></param>
         /// <param name="quantity"></param>
         /// <param name="price"></param>
-        public Condition(Type.Condition condition, int quantity, decimal price)
+        [JsonConstructor]
+        public Condition(Type.Condition conditionEnum, int quantity, decimal price)
         {
-            ConditionEnum = condition;
+            ConditionEnum = conditionEnum;
             Quantity = quantity;
             Price = price;
         }
@@ -38,8 +40,6 @@ namespace GenSpil.Model
         {
             Quantity = quantity;
         }
-
-
 
         public override string ToString()
         {
