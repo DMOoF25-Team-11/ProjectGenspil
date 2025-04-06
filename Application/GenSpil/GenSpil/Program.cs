@@ -502,6 +502,10 @@ internal class Program
             {
                 return null; // Return null if Esc is pressed
             }
+            if (keyInfo.Key == ConsoleKey.Tab)
+            {
+                continue; // Ignore Tab key
+            }
             if (keyInfo.Key == ConsoleKey.Backspace && input.Length > 0)
             {
                 input.Remove(input.Length - 1, 1);
