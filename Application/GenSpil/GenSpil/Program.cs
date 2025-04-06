@@ -537,7 +537,13 @@ internal class Program
             indent -= 2;
         }
     }
-    static BoardGameVariant ShowBoardGameVariantPerPage(BoardGame boardGame, BoardGameVariant boardGameVariant)
+    /// <summary>
+    /// Displays the details of a specific board game variant with menu.
+    /// </summary>
+    /// <param name="boardGame"></param>
+    /// <param name="boardGameVariant"></param>
+    /// <returns></returns>
+    static BoardGameVariant ShowBoardGameVariantWithMenu(BoardGame boardGame, BoardGameVariant boardGameVariant)
     {
         HeadLine(boardGame.Title);
         Console.WriteLine(boardGame.ToString());
@@ -744,7 +750,7 @@ internal class Program
                         prefix = "";
                     else
                         prefix = " : ";
-                    menuItems.Add(new MenuItem(boardGame.Title + prefix + boardGameVariant.Title, (() => result = ShowBoardGameVariantPerPage(boardGame, boardGameVariant))));
+                    menuItems.Add(new MenuItem(boardGame.Title + prefix + boardGameVariant.Title, (() => result = ShowBoardGameVariantWithMenu(boardGame, boardGameVariant))));
                 }
             }
             else
