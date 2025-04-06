@@ -6,9 +6,9 @@
     public enum Condition
     {
         Ny,
-        Brugt,
         God,
-        Slidt,
+        Ok,
+        Skrammet,
         Reparation
     }
 }

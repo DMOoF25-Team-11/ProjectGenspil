@@ -121,8 +121,13 @@ internal class Program
         Console.WriteLine(boardGame.ToString());
         foreach (BoardGameVariant boardGameVariant in boardGame.Variants)
         {
+            string prefix = "";
+            if (boardGameVariant.Title == "")
+                prefix = "";
+            else
+                prefix = " : ";
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("Variant : " + boardGameVariant.ToString());
+            Console.WriteLine(boardGame.Title + prefix + boardGameVariant.ToString());
             Console.ResetColor();
             indent += 2;
             foreach (var conditions in boardGameVariant.ConditionList.Conditions)
@@ -235,9 +240,9 @@ internal class Program
     {
         int cTop;
         int cInputLeft = 27;
-        BoardGame? boardGame;
         string? variantTitle;
         string? numbersOfPlayers;
+        BoardGame? boardGame;
         BoardGameVariant variant;
 
         if (guid == null)
@@ -279,11 +284,54 @@ internal class Program
             //    variant.ConditionList.Conditions.Add(new Condition((Type.Condition)c, 0, 0));
             //}
             _boardGameList.Add(variant, boardGame.Guid);
+            ChangePriceAndQuantity(variant, boardGame.Guid);
             return;
         }
         Console.WriteLine("Ingen brætspil valgt. Tryk på en tast for at fortsætte...");
         Console.ReadKey();
         return;
+    }
+    static void ChangePriceAndQuantity(BoardGameVariant boardGameVariant, Guid guid)
+    {
+        int cTop;
+        int cInputLeft = 21;
+        string? price;
+        string? quantity;
+        Console.CursorVisible = true;
+        // Headline
+        HeadLine("Ændre pris og antal");
+        // Form
+        cTop = Console.CursorTop;
+        for (int i = 0; i < boardGameVariant.ConditionList.Conditions.Count; i++)
+        {
+            Console.Write(boardGameVariant.ConditionList.Conditions.ElementAt(i).ConditionEnum.ToString());
+            Console.Write(" - ");
+            Console.Write("Pris");
+            Console.CursorLeft = cInputLeft - 2;
+            Console.Write(": ");
+            Console.WriteLine(boardGameVariant.ConditionList.Conditions.ElementAt(i).Price.ToString());
+
+            Console.Write("Antal");
+            Console.CursorLeft = cInputLeft - 2;
+            Console.WriteLine(":");
+        }
+        for (int i = 0; i < boardGameVariant.ConditionList.Conditions.Count; i++)
+        {
+            // User input
+            Console.SetCursorPosition(cInputLeft, cTop++);
+            price = ReadLineWithEscape();
+            Console.SetCursorPosition(cInputLeft, cTop++);
+            quantity = ReadLineWithEscape();
+            if (decimal.TryParse(price, out decimal parsedPrice))
+            {
+                boardGameVariant.ConditionList.Conditions.ElementAt(i).Price = parsedPrice;
+            }
+            if (int.TryParse(quantity, out int parsedQuantity))
+            {
+                boardGameVariant.ConditionList.Conditions.ElementAt(i).Quantity = parsedQuantity;
+            }
+        }
+        Console.CursorVisible = false;
     }
     /// <summary>
     /// Removes a board game.
@@ -536,11 +584,13 @@ internal class Program
                     list.Add((Type.Genre)gerneInt);
                 }
             }
-
-            // Try to parse as string
-            if (Enum.TryParse(item, true, out Type.Genre genreEnum))
+            else
             {
-                list.Add(genreEnum);
+                // Try to parse as string
+                if (Enum.TryParse(item, true, out Type.Genre genreEnum))
+                {
+                    list.Add(genreEnum);
+                }
             }
         }
 

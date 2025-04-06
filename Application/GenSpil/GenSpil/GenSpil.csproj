@@ -18,10 +18,8 @@
     <PackageReference Include="TirsvadCLI.MenuPaginator" Version="0.2.2.6" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="data\genspil.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <Folder Include="data\" />
+    </ItemGroup>
 
 </Project>
