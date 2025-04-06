@@ -332,6 +332,7 @@ internal class Program
         int cInputLeft = 21;
         string? price;
         string? quantity;
+        string indentString = new string(' ', 4);
         Console.CursorVisible = true;
         // Headline
         HeadLine("Ændre pris og antal");
@@ -339,14 +340,14 @@ internal class Program
         cTop = Console.CursorTop;
         for (int i = 0; i < boardGameVariant.ConditionList.Conditions.Count; i++)
         {
-            Console.Write(boardGameVariant.ConditionList.Conditions.ElementAt(i).ConditionEnum.ToString());
-            Console.Write(" - ");
-            Console.Write("Pris");
+            Console.WriteLine(boardGameVariant.ConditionList.Conditions.ElementAt(i).ConditionEnum.ToString());
+            //Console.WriteLine(Enum.GetName(typeof(Type.Condition), boardGameVariant.ConditionList.Conditions.ElementAt(i).ConditionEnum));
+            Console.Write(indentString + "Pris");
             Console.CursorLeft = cInputLeft - 2;
             Console.Write(": ");
             Console.WriteLine(boardGameVariant.ConditionList.Conditions.ElementAt(i).Price.ToString());
 
-            Console.Write("Antal");
+            Console.Write(indentString + "Antal");
             Console.CursorLeft = cInputLeft - 2;
             Console.Write(": ");
             Console.WriteLine(boardGameVariant.ConditionList.Conditions.ElementAt(i).Quantity.ToString());
@@ -354,6 +355,7 @@ internal class Program
         for (int i = 0; i < boardGameVariant.ConditionList.Conditions.Count; i++)
         {
             // User input
+            cTop++;
             Console.SetCursorPosition(cInputLeft, cTop++);
             price = ReadLineWithEscape();
             Console.SetCursorPosition(cInputLeft, cTop++);

@@ -64,7 +64,7 @@ public class JsonFileHandler
         {
             WriteIndented = true,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase, ///> Use camel case for property names
-            Converters = { new JsonStringEnumConverter() }
+            Converters = { /*new JsonStringEnumConverter()*/ }
         };
     } ///> Private constructor for singleton pattern
 

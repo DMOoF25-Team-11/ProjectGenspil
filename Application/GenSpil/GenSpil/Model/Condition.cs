@@ -5,9 +5,9 @@ namespace GenSpil.Model
 {
     public class Condition
     {
-        public Type.Condition ConditionEnum { get; private set; }
-        public int Quantity { get; private set; }
-        public decimal Price { get; private set; }
+        public Type.Condition ConditionEnum { get; private set; } ///> ConditionEnum for the boardgame
+        public int Quantity { get; private set; } ///> Quantity of the boardgame condition
+        public decimal Price { get; private set; } ///> Price of the boardgame condition
 
         /// <summary>
         /// Constructor til Condition
@@ -41,6 +41,10 @@ namespace GenSpil.Model
             Quantity = quantity;
         }
 
+        /// <summary>
+        /// ToString method for Condition
+        /// </summary>
+        /// <returns>Formatted string</returns>
         public override string ToString()
         {
             string result;

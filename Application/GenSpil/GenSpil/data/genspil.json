@@ -1,0 +1,518 @@
+{
+  "version": "1.0",
+  "boardGames": {
+    "boardGames": [
+      {
+        "guid": "0a33dcc9-87a7-4c0a-82db-fe13b40123a5",
+        "title": "Sequence",
+        "variants": [
+          {
+            "title": "",
+            "reserved": null,
+            "numbersOfPlayers": "2-12",
+            "conditionList": {
+              "conditions": [
+                {
+                  "conditionEnum": 0,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 1,
+                  "quantity": 1,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 2,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 3,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 4,
+                  "quantity": 2,
+                  "price": 0
+                }
+              ]
+            }
+          },
+          {
+            "title": "Junior",
+            "reserved": null,
+            "numbersOfPlayers": "2-12",
+            "conditionList": {
+              "conditions": [
+                {
+                  "conditionEnum": 0,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 1,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 2,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 3,
+                  "quantity": 1,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 4,
+                  "quantity": 0,
+                  "price": 0
+                }
+              ]
+            }
+          },
+          {
+            "title": "Giant",
+            "reserved": null,
+            "numbersOfPlayers": "2-12",
+            "conditionList": {
+              "conditions": [
+                {
+                  "conditionEnum": 0,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 1,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 2,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 3,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 4,
+                  "quantity": 0,
+                  "price": 0
+                }
+              ]
+            }
+          },
+          {
+            "title": "Rejsespil",
+            "reserved": null,
+            "numbersOfPlayers": "2-12",
+            "conditionList": {
+              "conditions": [
+                {
+                  "conditionEnum": 0,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 1,
+                  "quantity": 2,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 2,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 3,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 4,
+                  "quantity": 0,
+                  "price": 0
+                }
+              ]
+            }
+          }
+        ],
+        "genre": [
+          4
+        ]
+      },
+      {
+        "guid": "0cde93a1-211b-495b-9383-f50deea1c39e",
+        "title": "Ticket to ride",
+        "variants": [
+          {
+            "title": "",
+            "reserved": null,
+            "numbersOfPlayers": "2-4",
+            "conditionList": {
+              "conditions": [
+                {
+                  "conditionEnum": 0,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 1,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 2,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 3,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 4,
+                  "quantity": 0,
+                  "price": 0
+                }
+              ]
+            }
+          },
+          {
+            "title": "Berlin",
+            "reserved": null,
+            "numbersOfPlayers": "",
+            "conditionList": {
+              "conditions": [
+                {
+                  "conditionEnum": 0,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 1,
+                  "quantity": 3,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 2,
+                  "quantity": 1,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 3,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 4,
+                  "quantity": 1,
+                  "price": 0
+                }
+              ]
+            }
+          },
+          {
+            "title": "Europe - engelsk",
+            "reserved": null,
+            "numbersOfPlayers": "",
+            "conditionList": {
+              "conditions": [
+                {
+                  "conditionEnum": 0,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 1,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 2,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 3,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 4,
+                  "quantity": 0,
+                  "price": 0
+                }
+              ]
+            }
+          },
+          {
+            "title": "Europe - dansk",
+            "reserved": null,
+            "numbersOfPlayers": "",
+            "conditionList": {
+              "conditions": [
+                {
+                  "conditionEnum": 0,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 1,
+                  "quantity": 2,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 2,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 3,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 4,
+                  "quantity": 0,
+                  "price": 0
+                }
+              ]
+            }
+          },
+          {
+            "title": "First journey",
+            "reserved": null,
+            "numbersOfPlayers": "2-4",
+            "conditionList": {
+              "conditions": [
+                {
+                  "conditionEnum": 0,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 1,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 2,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 3,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 4,
+                  "quantity": 0,
+                  "price": 0
+                }
+              ]
+            }
+          },
+          {
+            "title": "Europe 1912",
+            "reserved": null,
+            "numbersOfPlayers": "",
+            "conditionList": {
+              "conditions": [
+                {
+                  "conditionEnum": 0,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 1,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 2,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 3,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 4,
+                  "quantity": 0,
+                  "price": 0
+                }
+              ]
+            }
+          },
+          {
+            "title": "Ghost train",
+            "reserved": null,
+            "numbersOfPlayers": "",
+            "conditionList": {
+              "conditions": [
+                {
+                  "conditionEnum": 0,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 1,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 2,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 3,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 4,
+                  "quantity": 0,
+                  "price": 0
+                }
+              ]
+            }
+          },
+          {
+            "title": "New Yourrk",
+            "reserved": null,
+            "numbersOfPlayers": "",
+            "conditionList": {
+              "conditions": [
+                {
+                  "conditionEnum": 0,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 1,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 2,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 3,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 4,
+                  "quantity": 0,
+                  "price": 0
+                }
+              ]
+            }
+          },
+          {
+            "title": "Japan \u0026 Italy",
+            "reserved": null,
+            "numbersOfPlayers": "",
+            "conditionList": {
+              "conditions": [
+                {
+                  "conditionEnum": 0,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 1,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 2,
+                  "quantity": 1,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 3,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 4,
+                  "quantity": 0,
+                  "price": 0
+                }
+              ]
+            }
+          },
+          {
+            "title": "Nothern Lights",
+            "reserved": null,
+            "numbersOfPlayers": "",
+            "conditionList": {
+              "conditions": [
+                {
+                  "conditionEnum": 0,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 1,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 2,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 3,
+                  "quantity": 0,
+                  "price": 0
+                },
+                {
+                  "conditionEnum": 4,
+                  "quantity": 0,
+                  "price": 0
+                }
+              ]
+            }
+          }
+        ],
+        "genre": [
+          4
+        ]
+      }
+    ]
+  },
+  "users": {
+    "users": [
+      {
+        "name": "admin",
+        "password": "admin",
+        "role": 0
+      },
+      {
+        "name": "user",
+        "password": "user",
+        "role": 1
+      }
+    ]
+  },
+  "customers": {
+    "customers": []
+  }
+}
