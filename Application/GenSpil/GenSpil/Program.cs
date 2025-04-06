@@ -278,11 +278,8 @@ internal class Program
                 return;
             }
 
-            variant = new BoardGameVariant("", numbersOfPlayers, new ConditionList());
-            //foreach (var c in Type.Condition.GetValues(typeof(Type.Condition)))
-            //{
-            //    variant.ConditionList.Conditions.Add(new Condition((Type.Condition)c, 0, 0));
-            //}
+            variant = new BoardGameVariant(variantTitle, numbersOfPlayers, new ConditionList());
+
             _boardGameList.Add(variant, boardGame.Guid);
             ChangePriceAndQuantity(variant, boardGame.Guid);
             return;
