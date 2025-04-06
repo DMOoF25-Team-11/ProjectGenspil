@@ -107,6 +107,18 @@ internal class Program
         _boardGameList.Remove(boardGame);
     }
     /// <summary>
+    /// Removes a board game variant from the list.
+    /// Removes the board game from the list if it has no variants left.
+    /// </summary>
+    /// <param name="boardGame">The board game from which to remove the variant.</param>
+    /// <param name="boardGameVariant">The variant to remove.</param>
+    static void RemoveBoardGameVariant(BoardGame boardGame, BoardGameVariant boardGameVariant)
+    {
+        boardGame.Variants.Remove(boardGameVariant);
+        if (boardGame.Variants.Count == 0)
+            _boardGameList.Remove(boardGame);
+    }
+    /// <summary>
     /// Centers the given text within a specified width.
     /// </summary>
     /// <param name="text">The text to center.</param>
@@ -465,8 +477,6 @@ internal class Program
     {
         HeadLine(boardGame.Title);
         ShowBoardGameBody(boardGame);
-        Console.WriteLine("\nTryk på en tast for at fortsætte...");
-        Console.ReadKey();
         return boardGame;
     }
     /// <summary>
@@ -536,8 +546,15 @@ internal class Program
         {
             Console.WriteLine("Condition : " + conditions.ToString());
         }
-        Console.WriteLine("\nTryk på en tast for at fortsætte...");
-        Console.ReadKey();
+        Console.WriteLine();
+        List<MenuItem> menuItems = new();
+        menuItems.Add(new MenuItem("Rediger pris og antal", () => EditPriceAndQuantity(boardGameVariant, boardGame.Guid)));
+        //menuItems.Add(new MenuItem("Tilføj til reservation", () => boardGameVariant.SetReserved(new Reserve())));
+        //menuItems.Add(new MenuItem("Fjern reservation", () => boardGameVariant.SetReserved(null)));
+        menuItems.Add(new MenuItem("Fjern spil", () => RemoveBoardGameVariant(boardGame, boardGameVariant)));
+        MenuPaginator menu = new(menuItems, 10);
+        if (menu.menuItem != null && menu.menuItem.Action is Action action)
+            action();
         return boardGameVariant;
     }
     /// <summary>
