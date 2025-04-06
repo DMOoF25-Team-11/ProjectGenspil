@@ -485,6 +485,8 @@ internal class Program
         {
             ShowBoardGame(boardGame);
         }
+        Console.WriteLine("\nTryk på en tast for at fortsætte...");
+        Console.ReadKey();
     }
     /// <summary>
     /// Centers the given text within a specified width.
