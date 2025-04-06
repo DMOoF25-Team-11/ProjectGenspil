@@ -348,7 +348,8 @@ internal class Program
 
             Console.Write("Antal");
             Console.CursorLeft = cInputLeft - 2;
-            Console.WriteLine(":");
+            Console.Write(": ");
+            Console.WriteLine(boardGameVariant.ConditionList.Conditions.ElementAt(i).Quantity.ToString());
         }
         for (int i = 0; i < boardGameVariant.ConditionList.Conditions.Count; i++)
         {
@@ -363,7 +364,7 @@ internal class Program
             }
             if (int.TryParse(quantity, out int parsedQuantity))
             {
-                boardGameVariant.ConditionList.Conditions.ElementAt(i).SetPrice(parsedQuantity);
+                boardGameVariant.ConditionList.Conditions.ElementAt(i).SetQuantity(parsedQuantity);
             }
         }
         Console.CursorVisible = false;
