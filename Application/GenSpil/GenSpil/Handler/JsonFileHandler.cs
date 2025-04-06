@@ -84,19 +84,21 @@ public class JsonFileHandler
     /// Imports data from a JSON file.
     /// Reassign owner object for Car objects. So owner object is the same in OwnerList and CarList.
     /// </summary>
-    /// <param name="filename">Optional. Default value from Constants.jsonFilePath</param>
-    public void ImportData(string filename)
+    /// <param name="filePath">Optional. Default value from Constants.jsonFilePath</param>
+    public void ImportData(string filePath)
     {
         lock (_lock)
         {
             try
             {
-                if (File.Exists(filename))
+                CheckAndCreateEmptyJsonFile(filePath);
+
+                if (File.Exists(filePath))
                 {
                     BoardGameList.Instance.Clear();
                     UserList.Instance.Users.Clear();
                     CustomerList.Instance.Clear();
-                    string jsonString = File.ReadAllText(filename);
+                    string jsonString = File.ReadAllText(filePath);
                     var options = new JsonSerializerOptions
                     {
                         Converters = { new JsonStringEnumConverter() }
@@ -133,5 +135,29 @@ public class JsonFileHandler
             }
         }
     }
+    public void CheckAndCreateEmptyJsonFile(string filePath)
+    {
+        lock (_lock)
+        {
+            if (!File.Exists(filePath) || new FileInfo(filePath).Length == 0)
+            {
+                //var emptyDataContainer = new DataContainer
+                //{
+                //    Version = _version,
+                //    BoardGames = new BoardGameList(),
+                //    Users = new UserList(),
+                //    Customers = new CustomerList()
+                //};
 
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    Converters = { new JsonStringEnumConverter() }
+                };
+
+                string jsonString = JsonSerializer.Serialize(_dataContainer, options);
+                File.WriteAllText(filePath, jsonString);
+            }
+        }
+    }
 }
