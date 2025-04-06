@@ -99,17 +99,49 @@ internal class Program
         Login();
     }
     /// <summary>
-    /// Displays the details of a board game.
+    /// Displays the details of a board game with press a key to continue.
     /// </summary>
-    /// <param name="boardGame">The board game to display.</param>
-    /// <returns>The displayed board game.</returns>
-    static BoardGame ShowBoardGame(BoardGame boardGame)
+    /// <param name="boardGame"> The board game to display.</param>
+    /// <returns>The board game.</returns>
+    static BoardGame ShowBoardGamePerPage(BoardGame boardGame)
     {
         HeadLine(boardGame.Title);
         ShowBoardGameBody(boardGame);
         Console.WriteLine("\nTryk på en tast for at fortsætte...");
         Console.ReadKey();
         return boardGame;
+    }
+    /// <summary>
+    /// Displays the details of a board game.
+    /// </summary>
+    /// <param name="boardGame">The board game to display.</param>
+    /// <returns>The displayed board game.</returns>
+    static BoardGame ShowBoardGame(BoardGame boardGame)
+    {
+        SubHeadLine(boardGame.Title);
+        ShowBoardGameBody(boardGame);
+        return boardGame;
+    }
+    /// <summary>
+    /// Displays the details of a list of board games.
+    /// </summary>
+    /// <param name="boardGames">The list of board games to display.</param>
+    static void ShowBoardGame(IEnumerable<BoardGame> boardGames, bool OnePerPage = false)
+    {
+        if (OnePerPage)
+        {
+            foreach (BoardGame boardGame in boardGames)
+            {
+                ShowBoardGamePerPage(boardGame);
+            }
+            return;
+        }
+        foreach (BoardGame boardGame in boardGames)
+        {
+            ShowBoardGame(boardGame);
+        }
+        Console.WriteLine("\nTryk på en tast for at fortsætte...");
+        Console.ReadKey();
     }
     /// <summary>
     /// Displays the details of a board game and its variants.
@@ -137,23 +169,7 @@ internal class Program
             indent -= 2;
         }
     }
-    /// <summary>
-    /// Displays the details of a list of board games.
-    /// </summary>
-    /// <param name="boardGames">The list of board games to display.</param>
-    static void ShowBoardGame(IEnumerable<BoardGame> boardGames)
-    {
-        foreach (BoardGame boardGame in boardGames)
-        {
-            ShowBoardGame(boardGame);
-        }
-    }
-    /// <summary>
-    /// Displays the details of a specific board game variant.
-    /// </summary>
-    /// <param name="boardGame">The board game to display.</param>
-    /// <param name="boardGameVariant">The variant of the board game to display.</param>
-    static void ShowBoardGameVariant(BoardGame boardGame, BoardGameVariant boardGameVariant)
+    static BoardGameVariant ShowBoardGameVariantPerPage(BoardGame boardGame, BoardGameVariant boardGameVariant)
     {
         HeadLine(boardGame.Title);
         Console.WriteLine(boardGame.ToString());
@@ -164,6 +180,23 @@ internal class Program
         }
         Console.WriteLine("\nTryk på en tast for at fortsætte...");
         Console.ReadKey();
+        return boardGameVariant;
+    }
+    /// <summary>
+    /// Displays the details of a specific board game variant.
+    /// </summary>
+    /// <param name="boardGame">The board game to display.</param>
+    /// <param name="boardGameVariant">The variant of the board game to display.</param>
+    static BoardGameVariant ShowBoardGameVariant(BoardGame boardGame, BoardGameVariant boardGameVariant)
+    {
+        SubHeadLine(boardGame.Title);
+        Console.WriteLine(boardGame.ToString());
+        Console.WriteLine("Variant : " + boardGameVariant.ToString());
+        foreach (var conditions in boardGameVariant.ConditionList.Conditions)
+        {
+            Console.WriteLine("Condition : " + conditions.ToString());
+        }
+        return boardGameVariant;
     }
     /// <summary>
     /// Prompts the user to add a new board game.
@@ -243,9 +276,10 @@ internal class Program
         string? numbersOfPlayers;
         BoardGame? boardGame;
         BoardGameVariant variant;
+        //boardGame = MenuChooseBoardGame(false) as BoardGame;
 
         if (guid == null)
-            boardGame = MenuChooseBoardGame(false);
+            boardGame = MenuChooseBoardGame(false) as BoardGame;
         else
             boardGame = _boardGameList.GetBoardGameById(guid.Value);
         if (boardGame != null)
@@ -280,14 +314,19 @@ internal class Program
             variant = new BoardGameVariant(variantTitle, numbersOfPlayers, new ConditionList());
 
             _boardGameList.Add(variant, boardGame.Guid);
-            ChangePriceAndQuantity(variant, boardGame.Guid);
+            EditPriceAndQuantity(variant, boardGame.Guid);
             return;
         }
         Console.WriteLine("Ingen brætspil valgt. Tryk på en tast for at fortsætte...");
         Console.ReadKey();
         return;
     }
-    static void ChangePriceAndQuantity(BoardGameVariant boardGameVariant, Guid guid)
+    /// <summary>
+    /// Edits the price and quantity of a board game variant.
+    /// </summary>
+    /// <param name="boardGameVariant"></param>
+    /// <param name="guid"></param>
+    static void EditPriceAndQuantity(BoardGameVariant boardGameVariant, Guid guid)
     {
         int cTop;
         int cInputLeft = 21;
@@ -320,11 +359,11 @@ internal class Program
             quantity = ReadLineWithEscape();
             if (decimal.TryParse(price, out decimal parsedPrice))
             {
-                boardGameVariant.ConditionList.Conditions.ElementAt(i).Price = parsedPrice;
+                boardGameVariant.ConditionList.Conditions.ElementAt(i).SetPrice(parsedPrice);
             }
             if (int.TryParse(quantity, out int parsedQuantity))
             {
-                boardGameVariant.ConditionList.Conditions.ElementAt(i).Quantity = parsedQuantity;
+                boardGameVariant.ConditionList.Conditions.ElementAt(i).SetPrice(parsedQuantity);
             }
         }
         Console.CursorVisible = false;
@@ -431,6 +470,8 @@ internal class Program
         {
             ShowBoardGame(boardGame);
         }
+        Console.WriteLine("\nTryk på en tast for at fortsætte...");
+        Console.ReadKey();
     }
     /// <summary>
     /// Displays a headline with the title and version of the program.
@@ -464,8 +505,14 @@ internal class Program
         Console.WriteLine(new string('-', l + 1));
         Console.WriteLine();
     }
+    /// <summary>
+    /// Displays a sub-headline with the given text.
+    /// </summary>
+    /// <param name="headLine"></param>
     static void SubHeadLine(string headLine)
     {
+        Console.WriteLine();
+        Console.WriteLine(new string('-', 80));
         Console.WriteLine(CenterString(headLine, 80));
         Console.WriteLine(new string('-', 80));
     }
@@ -721,9 +768,9 @@ internal class Program
     /// Item with it action is returned.
     /// Then we execute the action.
     /// </summary>
-    static BoardGame? MenuChooseBoardGame(bool ShowVariants = true)
+    static object? MenuChooseBoardGame(bool ShowVariants = true)
     {
-        BoardGame? result = null;
+        object? result = null;
         string prefix = "";
         Console.Clear();
         HeadLine("Vælg spil");
@@ -738,7 +785,7 @@ internal class Program
                         prefix = "";
                     else
                         prefix = " : ";
-                    menuItems.Add(new MenuItem(boardGame.Title + prefix + boardGameVariant.Title, (() => ShowBoardGameVariant(boardGame, boardGameVariant))));
+                    menuItems.Add(new MenuItem(boardGame.Title + prefix + boardGameVariant.Title, (() => result = ShowBoardGameVariantPerPage(boardGame, boardGameVariant))));
                 }
             }
             else
