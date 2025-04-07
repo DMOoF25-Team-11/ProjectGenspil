@@ -856,7 +856,7 @@ internal class Program
     static void Main(string[] args)
     {
         JsonFileHandler.Instance.ImportData(DATA_JSON_FILE);
-        //Login();
+        Login();
         MenuMain();
         JsonFileHandler.Instance.ExportData(DATA_JSON_FILE);
     }
