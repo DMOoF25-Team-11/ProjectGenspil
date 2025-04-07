@@ -122,7 +122,7 @@ public class JsonFileHandler
                         }
                         for (int i = 0; i < data.Customers?.Customers.Count; i++)
                         {
-                            CustomerList.Instance.AddCustomer(data.Customers.Customers[i]);
+                            CustomerList.Instance.Add(data.Customers.Customers[i]);
                         }
                     }
                     else

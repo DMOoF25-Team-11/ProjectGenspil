@@ -15,6 +15,7 @@ internal class Program
     static BoardGameList _boardGameList;
     static Authentication _auth;
     static UserList _userList;
+    static CustomerList _customerList = CustomerList.Instance;
     static JsonFileHandler _jsonFileHandler = JsonFileHandler.Instance;
 
     /// <summary>
@@ -22,10 +23,11 @@ internal class Program
     /// </summary>
     static Program()
     {
-        _boardGameList = BoardGameList.Instance;
-        _userList = UserList.Instance;
         CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("da-DK");
         CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("da-DK");
+        _boardGameList = BoardGameList.Instance;
+        _userList = UserList.Instance;
+        _customerList = CustomerList.Instance;
         _auth = new Authentication();
     }
     /// <summary>
@@ -219,6 +221,7 @@ internal class Program
         Console.WriteLine("Tryk på en tast for at fortsætte...");
         Console.ReadKey();
     }
+
 
     #region ui
 
@@ -465,6 +468,97 @@ internal class Program
 
         ShowBoardGame(filteredBoardGames);
     }
+    static void AddCustomer()
+    {
+        int cTop;
+        int cInputLeft = 14;
+        string? name;
+        string? address;
+        Console.CursorVisible = true;
+        // Headline
+        HeadLine("Tilføj kunde");
+        // Form
+        cTop = Console.CursorTop;
+        Console.Write("Navn");
+        Console.CursorLeft = cInputLeft - 2;
+        Console.WriteLine(":");
+        Console.Write("Adresse");
+        Console.CursorLeft = cInputLeft - 2;
+        Console.WriteLine(":");
+        // User input
+        Console.SetCursorPosition(cInputLeft, cTop++);
+        name = ReadLineWithEscape();
+        Console.SetCursorPosition(cInputLeft, cTop++);
+        address = ReadLineWithEscape();
+        Console.CursorVisible = false;
+        if (name == null)
+        {
+            ErrorMessage("Intet indtastet om navn.");
+            return;
+        }
+
+        _customerList.Add(new Customer(_customerList.GenerateID(), name, address));
+    }
+    static void ReseveBoardGame(BoardGameVariant boardGameVariant)
+    {
+        int cTop;
+        int cInputLeft = 14;
+        int quantity = 0;
+        int customerId = 0;
+        //Console.Clear();
+        Console.CursorVisible = true;
+        HeadLine("Reserver brætspil");
+        //Console.WriteLine("Reservere brætspil: " + boardGameVariant.ToString());
+
+        cTop = Console.CursorTop;
+        Console.Write("KundeId");
+        Console.CursorLeft = cInputLeft - 2;
+        Console.WriteLine(":");
+        Console.Write("Antal");
+        Console.CursorLeft = cInputLeft - 2;
+        Console.WriteLine(":");
+        // User input
+        Console.SetCursorPosition(cInputLeft, cTop++);
+        string? customerIdString = ReadLineWithEscape();
+        Console.SetCursorPosition(cInputLeft, cTop++);
+        string? quantityString = ReadLineWithEscape();
+        Console.CursorVisible = false;
+        if (customerIdString == null)
+        {
+            ErrorMessage("Intet indtastet om kundeId.");
+            return;
+        }
+        if (quantityString == null)
+        {
+            ErrorMessage("Intet indtastet om antal.");
+            return;
+        }
+        if (int.TryParse(customerIdString, out int parsedCustomerId))
+        {
+            customerId = parsedCustomerId;
+        }
+        if (int.TryParse(quantityString, out int parsedQuantity))
+        {
+            quantity = parsedQuantity;
+        }
+
+        if (customerId == 0)
+        {
+            ErrorMessage("Intet indtastet om kundeId.");
+            return;
+        }
+        if (quantity == 0)
+        {
+            ErrorMessage("Intet indtastet om antal.");
+            return;
+        }
+        if (!_customerList.Exists(customerId))
+        {
+            ErrorMessage("KundeId findes ikke.");
+            return;
+        }
+        boardGameVariant.SetReserved(new Reserve(DateTime.Now, quantity, customerId));
+    }
     #endregion forms
 
     #region output
@@ -555,7 +649,7 @@ internal class Program
         Console.WriteLine();
         List<MenuItem> menuItems = new();
         menuItems.Add(new MenuItem("Rediger pris og antal", () => EditPriceAndQuantity(boardGameVariant, boardGame.Guid)));
-        //menuItems.Add(new MenuItem("Tilføj til reservation", () => boardGameVariant.SetReserved(new Reserve())));
+        menuItems.Add(new MenuItem("Reserver", () => ReseveBoardGame(boardGameVariant)));
         //menuItems.Add(new MenuItem("Fjern reservation", () => boardGameVariant.SetReserved(null)));
         menuItems.Add(new MenuItem("Fjern spil", () => RemoveBoardGameVariant(boardGame, boardGameVariant)));
         MenuPaginator menu = new(menuItems, 10);
@@ -621,6 +715,18 @@ internal class Program
         Console.WriteLine("\nTryk på en tast for at fortsætte...");
         Console.ReadKey();
     }
+    static void ShowCustomer()
+    {
+        Console.Clear();
+        HeadLine("Vis kunder");
+        Console.WriteLine(_customerList.Customers.Count + "KundeId\tNavn\tAdresse");
+        foreach (var customer in _customerList.Customers)
+        {
+            Console.WriteLine(customer.ToString());
+        }
+        Console.WriteLine("\nTryk på en tast for at fortsætte...");
+        Console.ReadKey();
+    }
 
     #endregion output
 
@@ -659,7 +765,19 @@ internal class Program
     /// </summary>
     static void MenuCostumer()
     {
-        throw new NotImplementedException();
+        do
+        {
+            Console.Clear();
+            HeadLine("Kunde");
+            List<MenuItem> menuItems = new();
+            menuItems.Add(new MenuItem("Vis kunder", ShowCustomer));
+            menuItems.Add(new MenuItem("Tilføj", AddCustomer));
+            MenuPaginator menu = new(menuItems, 10, true);
+            if (menu.menuItem != null && menu.menuItem.Action is Action action)
+                action(); // Execute the action
+            else
+                return;
+        } while (true);
     }
     /// <summary>
     /// Report menu
@@ -856,7 +974,9 @@ internal class Program
     static void Main(string[] args)
     {
         JsonFileHandler.Instance.ImportData(DATA_JSON_FILE);
+#if !DEBUG
         Login();
+#endif
         MenuMain();
         JsonFileHandler.Instance.ExportData(DATA_JSON_FILE);
     }
