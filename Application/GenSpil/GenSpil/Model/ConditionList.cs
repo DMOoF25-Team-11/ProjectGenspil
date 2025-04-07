@@ -4,7 +4,8 @@ namespace GenSpil.Model
 {
     public class ConditionList
     {
-        public ICollection<Condition> Conditions { get; set; }
+        public ICollection<Condition> Conditions { get; private set; }
+
         [JsonConstructor]
         public ConditionList()
         {

@@ -23,14 +23,19 @@ namespace GenSpil.Model
 
         public List<Customer> Customers { get; set; } ///> List of customers
 
-        [JsonConstructor]
         private CustomerList()
         {
             Customers = new List<Customer>();
         }
 
+        [JsonConstructor]
+        private CustomerList(List<Customer> customers)
+        {
+            Customers = customers;
+        }
+
         //Adds a customer to the list.
-        public void AddCustomer(Customer customer)
+        public void Add(Customer customer)
         {
             Customers.Add(customer);
         }
@@ -44,13 +49,13 @@ namespace GenSpil.Model
         //Findes a customer on the list.
         public Customer? GetCustomerByID(int customerID)
         {
-            return Customers.Find(c => c.CustomerID == customerID);
+            return Customers.Find(c => c.Id == customerID);
         }
 
         //Update function isn't completed.
         public void UpdateCustomer(int customerID, string newName, string newAddress)
         {
-            var customer = Customers.Find(c => c.CustomerID == customerID);
+            var customer = Customers.Find(c => c.Id == customerID);
 
             if (customer != null)
             {
@@ -68,19 +73,23 @@ namespace GenSpil.Model
         }
 
 
-        public int GenerateID(int customerID)
+        public int GenerateID()
         {
             if (Customers.Count == 0)
             {
                 return 1;
             }
-
-            return Customers.Max(c => c.CustomerID) + 1;
+            return Customers.Max(c => c.Id) + 1;
         }
 
         public void Clear()
         {
             Customers.Clear();
+        }
+
+        public bool Exists(int customerID)
+        {
+            return Customers.Any(c => c.Id == customerID);
         }
     }
 }
