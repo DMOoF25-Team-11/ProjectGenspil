@@ -11,6 +11,5 @@
         Selskab,
         Strategi,
         Quiz
-
     }
 }

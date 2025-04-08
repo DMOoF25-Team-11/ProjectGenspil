@@ -509,7 +509,6 @@ internal class Program
         //Console.Clear();
         Console.CursorVisible = true;
         HeadLine("Reserver brætspil");
-        //Console.WriteLine("Reservere brætspil: " + boardGameVariant.ToString());
         customer = MenuChooseCustomer();
         cTop = Console.CursorTop;
         Console.Write("Antal");
@@ -691,7 +690,7 @@ internal class Program
     /// </summary>
     static void ShowReportBoardGameSortTitle()
     {
-        var sortedBoardGames = _boardGameList.BoardGames.OrderBy(bg => bg.Title).ToList();
+        List<BoardGame> sortedBoardGames = _boardGameList.BoardGames.OrderBy(bg => bg.Title).ToList();
         foreach (var boardGame in sortedBoardGames)
         {
             ShowBoardGame(boardGame);
@@ -705,7 +704,7 @@ internal class Program
     /// <param name="headLine">The headline text to display.</param>
     static void ShowReportBoardGameSortGenre()
     {
-        var sortedBoardGames = _boardGameList.BoardGames.OrderBy(bg => bg.Genre).ToList();
+        List<BoardGame> sortedBoardGames = _boardGameList.BoardGames.OrderBy(bg => bg.Genre.FirstOrDefault().ToString()).ToList();
         foreach (var boardGame in sortedBoardGames)
         {
             ShowBoardGame(boardGame);
@@ -717,7 +716,7 @@ internal class Program
     {
         Console.Clear();
         HeadLine("Vis kunder");
-        Console.WriteLine(_customerList.Customers.Count + "KundeId\tNavn\tAdresse");
+        Console.WriteLine();
         foreach (var customer in _customerList.Customers)
         {
             Console.WriteLine(customer.ToString());
