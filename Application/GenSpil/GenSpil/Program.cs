@@ -511,7 +511,7 @@ internal class Program
         HeadLine("Reserver brætspil");
         //Console.WriteLine("Reservere brætspil: " + boardGameVariant.ToString());
         customer = MenuChooseCustomer();
-
+        cTop = Console.CursorTop;
         Console.Write("Antal");
         Console.CursorLeft = cInputLeft - 2;
         Console.WriteLine(":");
