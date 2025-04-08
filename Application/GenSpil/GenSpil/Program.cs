@@ -499,21 +499,19 @@ internal class Program
 
         _customerList.Add(new Customer(_customerList.GenerateID(), name, address));
     }
-    static void ReseveBoardGame(BoardGameVariant boardGameVariant)
+    static void ReserveBoardGame(BoardGameVariant boardGameVariant)
     {
         int cTop;
         int cInputLeft = 14;
         int quantity = 0;
         int customerId = 0;
+        Customer? customer;
         //Console.Clear();
         Console.CursorVisible = true;
         HeadLine("Reserver brætspil");
         //Console.WriteLine("Reservere brætspil: " + boardGameVariant.ToString());
+        customer = MenuChooseCustomer();
 
-        cTop = Console.CursorTop;
-        Console.Write("KundeId");
-        Console.CursorLeft = cInputLeft - 2;
-        Console.WriteLine(":");
         Console.Write("Antal");
         Console.CursorLeft = cInputLeft - 2;
         Console.WriteLine(":");
@@ -557,7 +555,7 @@ internal class Program
             ErrorMessage("KundeId findes ikke.");
             return;
         }
-        boardGameVariant.SetReserved(new Reserve(DateTime.Now, quantity, customerId));
+        boardGameVariant.SetReserved([new Reserve(DateTime.Now, quantity, customer)]);
     }
     #endregion forms
 
@@ -649,7 +647,7 @@ internal class Program
         Console.WriteLine();
         List<MenuItem> menuItems = new();
         menuItems.Add(new MenuItem("Rediger pris og antal", () => EditPriceAndQuantity(boardGameVariant, boardGame.Guid)));
-        menuItems.Add(new MenuItem("Reserver", () => ReseveBoardGame(boardGameVariant)));
+        menuItems.Add(new MenuItem("Reserver", () => ReserveBoardGame(boardGameVariant)));
         //menuItems.Add(new MenuItem("Fjern reservation", () => boardGameVariant.SetReserved(null)));
         menuItems.Add(new MenuItem("Fjern spil", () => RemoveBoardGameVariant(boardGame, boardGameVariant)));
         MenuPaginator menu = new(menuItems, 10);
@@ -747,7 +745,7 @@ internal class Program
             // Create a list of menu items
             List<MenuItem> menuItems = new();
             menuItems.Add(new MenuItem("Brætspil", MenuBoardGame));
-            menuItems.Add(new MenuItem("Kunde", MenuCostumer));
+            menuItems.Add(new MenuItem("Kunde", MenuCustomer));
             menuItems.Add(new MenuItem("Rapporter", MenuReport));
             if (_auth.GetRole(_auth.User) == Type.Role.Admin)
                 menuItems.Add(new MenuItem("Admin", MenuAdmin));
@@ -763,7 +761,7 @@ internal class Program
     /// <summary>
     /// Customer menu.
     /// </summary>
-    static void MenuCostumer()
+    static void MenuCustomer()
     {
         do
         {
@@ -875,6 +873,28 @@ internal class Program
             {
                 menuItems.Add(new MenuItem(boardGame.Title, (() => result = ShowBoardGame(boardGame))));
             }
+        }
+        MenuPaginator menu = new(menuItems, 10);
+        if (menu.menuItem != null && menu.menuItem.Action is Action action)
+        {
+            action();
+            return result;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    static Customer? MenuChooseCustomer()
+    {
+        Customer? result = null;
+        Console.Clear();
+        HeadLine("Vælg kunde");
+        List<MenuItem> menuItems = new();
+        foreach (Customer customer in _customerList.Customers.OrderBy(c => c.Name).ToList())
+        {
+            menuItems.Add(new MenuItem(customer.ToString(), (() => result = customer)));
         }
         MenuPaginator menu = new(menuItems, 10);
         if (menu.menuItem != null && menu.menuItem.Action is Action action)

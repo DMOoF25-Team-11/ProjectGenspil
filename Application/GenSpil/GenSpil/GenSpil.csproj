@@ -14,7 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="TirsvadCLI.Frame" Version="0.1.0-alpha.6" />
+    <PackageReference Include="TirsvadCLI.AnsiCode" Version="0.1.0-alpha.4" />
+    <PackageReference Include="TirsvadCLI.Frame" Version="0.1.0" />
     <PackageReference Include="TirsvadCLI.MenuPaginator" Version="0.2.2.9" />
   </ItemGroup>
 
@@ -23,7 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="data\genspil.json">
+      <None Update="data\genspil.json" Condition="'$(Configuration)' == 'Debug'">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>
