@@ -1,0 +1,17 @@
+<map id="GenSpil.Handler.JsonFileHandler.ImportData" name="GenSpil.Handler.JsonFileHandler.ImportData">
+<area shape="rect" id="Node000001" title="Imports data from a JSON file. Reassign owner object for Car objects. So owner object is the same in ..." alt="" coords="5,136,175,179"/>
+<area shape="rect" id="Node000002" href="$class_gen_spil_1_1_model_1_1_board_game_list.html#a62ceae6e7c0a4ce5f3055511d484fee7" title="Tilføjer et brætspil." alt="" coords="238,13,465,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,133,158,90,189,68,222,50,238,43,240,48,224,54,192,73,161,94,114,137"/>
+<area shape="rect" id="Node000004" href="$class_gen_spil_1_1_model_1_1_customer_list.html#ac8c2a72e0f3be7fe1de48b93557db2db" title=" " alt="" coords="244,64,459,91"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="136,133,222,100,252,92,253,97,223,105,138,138"/>
+<area shape="rect" id="Node000005" href="$class_gen_spil_1_1_model_1_1_user_list.html#abd68c3e48373aba3b74758cc950d39e5" title=" " alt="" coords="258,115,444,141"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="175,145,243,137,244,143,176,150"/>
+<area shape="rect" id="Node000006" href="$class_gen_spil_1_1_handler_1_1_json_file_handler.html#a1a579305db781ef1ab591fd6eb56e9a3" title=" " alt="" coords="223,165,480,208"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="176,164,208,168,207,173,175,170"/>
+<area shape="rect" id="Node000007" href="$class_gen_spil_1_1_model_1_1_board_game_list.html#aa06291efa40dc77f23ef6e0e91cd2b97" title=" " alt="" coords="249,232,454,275"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="133,177,224,218,244,224,242,229,222,222,131,182"/>
+<area shape="rect" id="Node000008" href="$class_gen_spil_1_1_model_1_1_customer_list.html#a02be0bec49f628605f00e7d90d845cd1" title=" " alt="" coords="255,299,448,341"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="109,177,157,231,189,260,224,284,242,293,240,298,221,289,186,264,153,235,105,181"/>
+<area shape="rect" id="Node000003" href="$class_gen_spil_1_1_model_1_1_board_game.html#ae8de21010618a47c8c6afc206d3b58ac" title=" " alt="" coords="528,5,711,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="465,24,512,24,512,29,465,29"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="GenSpil.Model.BoardGame.SetGuid" name="GenSpil.Model.BoardGame.SetGuid">
+<area shape="rect" id="Node000001" title=" " alt="" coords="498,5,681,48"/>
+<area shape="rect" id="Node000002" href="$class_gen_spil_1_1_model_1_1_board_game_list.html#a62ceae6e7c0a4ce5f3055511d484fee7" title="Tilføjer et brætspil." alt="" coords="223,13,450,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="482,29,450,29,450,24,482,24"/>
+<area shape="rect" id="Node000003" href="$class_gen_spil_1_1_handler_1_1_json_file_handler.html#a54d432a3736acc6ff8c506fe7826e6cf" title="Imports data from a JSON file. Reassign owner object for Car objects. So owner object is the same in ..." alt="" coords="5,5,175,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="207,29,175,29,175,24,207,24"/>
+</map>
