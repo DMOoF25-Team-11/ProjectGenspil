@@ -26,6 +26,7 @@ ProjectGenspil
 │   .gitignore                          # Specifisere hvilke filer der skal ignoreres af git
 │---document                            # Indeholder dokumentation for projektet
 │   │---meeting                         # Indeholder indkalse og referater fra møder
+|   |---doxygen                         # Indeholder dokumentation genereret af Doxygen
 │---Application                         # Indeholder kildekode for projektet
 │   │---GenSpil                         # Visual studio solution fil
 │   │   │---GenSpil                     # Visual studio projekt filer
@@ -33,6 +34,10 @@ ProjectGenspil
 |   |   |---Model                       # Models for the application
 |   |   |---Handler                     # Handlers for the application
 ```
+
+## Kode dokumnetation
+
+Kode doukmentation er tilgængelig i projektet. Den er genereret ved hjælp af [Doxygen](https://www.doxygen.nl/index.html). For at generere dokumentationen, skal du køre `doxygen` kommandoen i terminalen i roden af projektet. Dette vil generere HTML i `documents/doxygen` mappen.
 
 ## Kontakt os
 
