@@ -1,0 +1,4 @@
+var searchData=
+[
+  ['tostring_0',['ToString',['../class_gen_spil_1_1_model_1_1_board_game.html#a1509e0a0a4237eca89cb4050ad2f8035',1,'GenSpil.Model.BoardGame.ToString()'],['../class_gen_spil_1_1_model_1_1_board_game_list.html#ada3bb01cf08d2fc7e5a224bf28721640',1,'GenSpil.Model.BoardGameList.ToString()'],['../class_gen_spil_1_1_model_1_1_board_game_variant.html#a8df112c3229fffb9312164a81d26f4e1',1,'GenSpil.Model.BoardGameVariant.ToString()'],['../class_gen_spil_1_1_model_1_1_condition.html#a1b3e81b5d242744f0f97abf12e0d3285',1,'GenSpil.Model.Condition.ToString()'],['../class_gen_spil_1_1_model_1_1_condition_list.html#a9590cb41aa3fa297926a1b86c720cb71',1,'GenSpil.Model.ConditionList.ToString()'],['../class_gen_spil_1_1_model_1_1_customer.html#a20416c9ab9782ded691a99283374a086',1,'GenSpil.Model.Customer.ToString()']]]
+];
